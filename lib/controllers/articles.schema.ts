@@ -1,10 +1,12 @@
+import { createInsertSchema } from "drizzle-zod";
+import { articlesTable } from "@/lib/db/schema";
 import { z } from "zod";
 
-export const createArticleSchema = z.object({
-  title: z.string().nonempty(),
-  source: z
+export const createArticleSchema = createInsertSchema(articlesTable, {
+  title: z.string().trim(),
+  body: z
     .string()
-    .transform((val) => (val.trim() === "" ? undefined : val))
-    .optional(),
-  body: z.string().nonempty(),
+    .trim()
+    .transform((val) => val.replace(/\r\n/, "\n").replaceAll(/\n+/, "\n")),
+  source: z.string().optional(),
 });

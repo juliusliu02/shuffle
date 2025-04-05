@@ -6,7 +6,7 @@
 :root {
   /* get rid of webstorm variable not resolved error */
   --font-inter: "";
-  --font-eb-garamond: ""
+  --font-eb-garamond: "";
 }
 
 @theme inline {
@@ -126,5 +126,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  mark {
+    @apply bg-amber-300 px-1 py-0.5 rounded-md shadow-sm shadow-amber-300/50 box-decoration-clone;
   }
 }

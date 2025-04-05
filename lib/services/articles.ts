@@ -1,4 +1,4 @@
-import { ArticleInsert } from "@/lib/models";
+import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/models";
 import { db } from "@/lib/db";
 import { articlesTable } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -10,8 +10,19 @@ export const createArticle = async (data: ArticleInsert) => {
     .returning({ id: articlesTable.id });
 };
 
-export const getArticle = async (id: number) => {
-  return db.select().from(articlesTable).where(eq(articlesTable.id, id));
+export const getArticle = async (
+  id: number,
+): Promise<ArticleWithNotesAndHighlights | undefined> => {
+  return db.query.articlesTable.findFirst({
+    where: eq(articlesTable.id, id),
+    with: {
+      notes: {
+        with: {
+          highlights: true,
+        },
+      },
+    },
+  });
 };
 
 export const getArticles = async () => {

@@ -1,22 +1,62 @@
-import {
-  articlesTable,
-  flashcardsTable,
-  highlightsTable,
-  notesTable,
-  wordsTable,
-} from "@/lib/db/schema";
+import type {
+  BuildQueryResult,
+  DBQueryConfig,
+  ExtractTablesWithRelations,
+} from "drizzle-orm";
+import * as schema from "@/lib/db/schema";
 
-export type Article = typeof articlesTable.$inferSelect;
-export type ArticleInsert = typeof articlesTable.$inferInsert;
+export type Article = typeof schema.articlesTable.$inferSelect;
+export type ArticleInsert = Omit<
+  typeof schema.articlesTable.$inferInsert,
+  "id"
+>;
 
-export type Word = typeof wordsTable.$inferSelect;
-export type WordInsert = typeof wordsTable.$inferInsert;
+export type Note = typeof schema.notesTable.$inferSelect;
+export type NoteInsert = Omit<typeof schema.notesTable.$inferInsert, "id">;
 
-export type Note = typeof notesTable.$inferSelect;
-export type NoteInsert = typeof notesTable.$inferInsert;
+export type Highlight = typeof schema.highlightsTable.$inferSelect;
+export type HighlightInsert = Omit<
+  typeof schema.highlightsTable.$inferInsert,
+  "id"
+>;
 
-export type Highlight = typeof highlightsTable.$inferSelect;
-export type HighlightInsert = typeof highlightsTable.$inferInsert;
+export type Card = typeof schema.cardsTable.$inferSelect;
+export type CardInsert = Omit<typeof schema.cardsTable.$inferInsert, "id">;
 
-export type Flashcard = typeof flashcardsTable.$inferSelect;
-export type FlashcardInsert = typeof flashcardsTable.$inferInsert;
+type Schema = typeof schema;
+type TSchema = ExtractTablesWithRelations<Schema>;
+
+// Reference: https://github.com/drizzle-team/drizzle-orm/issues/695#issuecomment-1881454650
+export type IncludeRelation<TableName extends keyof TSchema> = DBQueryConfig<
+  "one" | "many",
+  boolean,
+  TSchema,
+  TSchema[TableName]
+>["with"];
+
+export type InferResultType<
+  TableName extends keyof TSchema,
+  With extends IncludeRelation<TableName> | undefined = undefined,
+> = BuildQueryResult<
+  TSchema,
+  TSchema[TableName],
+  {
+    with: With;
+  }
+>;
+
+export type NoteWithHighlights = InferResultType<
+  "notesTable",
+  { highlights: true }
+>;
+
+export type ArticleWithNotesAndHighlights = InferResultType<
+  "articlesTable",
+  {
+    notes: {
+      with: {
+        highlights: true;
+      };
+    };
+  }
+>;

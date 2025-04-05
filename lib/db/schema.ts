@@ -1,4 +1,5 @@
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { relations } from "drizzle-orm";
 
 // stores articles
 export const articlesTable = sqliteTable("articles_table", {
@@ -23,19 +24,33 @@ export const notesTable = sqliteTable("notes_table", {
 export const highlightsTable = sqliteTable("highlights_table", {
   id: int().primaryKey({ autoIncrement: true }),
   noteId: int()
-    .references(() => notesTable.id)
+    .references(() => notesTable.id, { onDelete: "cascade" })
     .notNull(),
-  paragraphIndex: int().notNull(),
-  sentenceIndex: int().notNull(),
   startOffset: int().notNull(),
   endOffset: int().notNull(),
 });
 
-export const flashcardsTable = sqliteTable("flashcards_table", {
+export const cardsTable = sqliteTable("cards_table", {
   id: int().primaryKey({ autoIncrement: true }),
-  noteId: int()
-    .references(() => notesTable.id)
-    .notNull(),
-  word: text().notNull(),
+  noteId: int().references(() => notesTable.id, { onDelete: "set null" }),
   context: text().notNull(),
 });
+
+export const notesRelation = relations(notesTable, ({ one, many }) => ({
+  article: one(articlesTable, {
+    fields: [notesTable.articleId],
+    references: [articlesTable.id],
+  }),
+  highlights: many(highlightsTable),
+}));
+
+export const articlesRelation = relations(articlesTable, ({ many }) => ({
+  notes: many(notesTable),
+}));
+
+export const highlightsRelation = relations(highlightsTable, ({ one }) => ({
+  note: one(notesTable, {
+    fields: [highlightsTable.noteId],
+    references: [notesTable.id],
+  }),
+}));

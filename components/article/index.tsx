@@ -1,17 +1,19 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { type Article as ArticleType } from "@/lib/models";
+import { ArticleWithNotesAndHighlights, Highlight } from "@/lib/models";
 
 type WithClass = {
   className?: string;
 };
 
-type ParagraphProps = WithClass & {
+type ParagraphProps = {
   text: string;
+  highlights: Highlight[];
 };
 
 type ArticleProps = {
-  article: ArticleType;
+  article: ArticleWithNotesAndHighlights;
+  ref: React.Ref<HTMLDivElement>;
 };
 
 const Title = ({ children, className }: React.PropsWithChildren<WithClass>) => {
@@ -27,36 +29,133 @@ const Source = ({
   className,
 }: React.PropsWithChildren<WithClass>) => {
   return (
-    <h2 className={cn("text-muted-foreground italic", className)}>
-      {children}
-    </h2>
+    <p className={cn("text-muted-foreground italic", className)}>{children}</p>
   );
 };
 
-const Paragraph = ({ text, className }: ParagraphProps) => {
+const getLocalHighlights = (
+  startIndex: number,
+  endIndex: number,
+  globalHighlights: Highlight[],
+): Highlight[] => {
+  const localHighlights: Highlight[] = [];
+
+  for (const global of globalHighlights) {
+    // get highlights in range
+    if (global.endOffset <= startIndex || global.startOffset >= endIndex) {
+      continue;
+    }
+    // trim at the edges
+    const localStart = Math.max(0, global.startOffset - startIndex);
+    const localEnd = Math.min(endIndex, global.endOffset) - startIndex;
+    // doesn't handle backward selection yet
+    if (localStart < localEnd) {
+      localHighlights.push({
+        ...global,
+        startOffset: localStart,
+        endOffset: localEnd,
+      });
+    }
+  }
+
+  return localHighlights;
+};
+
+const getHighlightedText = (
+  text: string,
+  highlights: Highlight[],
+): React.ReactNode[] => {
+  if (!highlights || highlights.length === 0) {
+    return [text]; // no highlights => just return the text as is
+  }
+
+  // Sort by start offset to process sequentially
+  const sorted = [...highlights].sort((a, b) => a.startOffset - b.startOffset);
+
+  const result: React.ReactNode[] = [];
+  let cursor = 0;
+
+  sorted.forEach((hl, index) => {
+    const { startOffset, endOffset, noteId, id } = hl;
+
+    // Push any non-highlighted text before this highlight
+    if (cursor < startOffset) {
+      result.push(text.slice(cursor, startOffset));
+    }
+
+    // Push the highlighted text
+    result.push(
+      <mark key={index} data-note-id={noteId} data-highlight-id={id}>
+        {text.slice(startOffset, endOffset)}
+      </mark>,
+    );
+
+    // Advance the cursor
+    cursor = endOffset;
+  });
+
+  // Append any remaining text after the last highlight
+  if (cursor < text.length) {
+    result.push(text.slice(cursor));
+  }
+
+  return result;
+};
+
+const Paragraph = ({ text, highlights }: ParagraphProps) => {
   const segmenter = new Intl.Segmenter("en", { granularity: "sentence" });
   const segments = [...segmenter.segment(text)];
 
+  let runningIndex = 0;
   return (
-    <p className={className}>
-      {segments.map((segment, i) => (
-        <span key={i}>{segment.segment}</span>
-      ))}
+    <p>
+      {segments.map((segment, i) => {
+        const localHighlights = getLocalHighlights(
+          runningIndex,
+          runningIndex + segment.segment.length,
+          highlights,
+        );
+        runningIndex += segment.segment.length;
+        return (
+          <span key={i}>
+            {getHighlightedText(segment.segment, localHighlights)}
+          </span>
+        );
+      })}
     </p>
   );
 };
 
-export const Article = ({ article }: ArticleProps) => {
+export const Article = ({ article, ref }: ArticleProps) => {
+  const notes = article.notes;
+  const highlights = notes.flatMap((note) => note.highlights);
+
+  let runningIndex = 0;
+
   return (
     <article className="space-y-6">
-      <Title className={"text-3xl"}>{article.title}</Title>
-      {article.source && (
-        <Source className={"text-lg"}>{article.source}</Source>
-      )}
-      <div className="font-serif text-xl/[300%] space-y-5">
-        {article.body.split("\n").map((line, index) => (
-          <Paragraph key={index} text={line} />
-        ))}
+      <header className="space-y-5">
+        <Title className={"text-3xl"}>{article.title}</Title>
+        {article.source && (
+          <Source className={"text-lg"}>{article.source}</Source>
+        )}
+      </header>
+      <div ref={ref} className="font-serif text-xl/[300%] space-y-5">
+        {article.body.split("\n").map((paragraph, index) => {
+          const localHighlights = getLocalHighlights(
+            runningIndex,
+            runningIndex + paragraph.length,
+            highlights,
+          );
+          runningIndex += paragraph.length;
+          return (
+            <Paragraph
+              key={index}
+              text={paragraph}
+              highlights={localHighlights}
+            />
+          );
+        })}
       </div>
     </article>
   );

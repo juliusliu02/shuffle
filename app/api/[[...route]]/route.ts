@@ -6,13 +6,12 @@ import { prettyJSON } from "hono/pretty-json";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { handle } from "hono/vercel";
 import ArticleApp from "@/lib/controllers/articles";
+import NoteApp from "@/lib/controllers/notes";
 
 // edge runtime doesn't support file link
 // export const runtime = "edge";
 
-const app = new Hono()
-  .basePath("/api")
-  .route("/articles", ArticleApp);
+const app = new Hono().basePath("/api");
 
 app.use(csrf());
 app.use(cors());
@@ -20,7 +19,10 @@ app.use(logger());
 app.use(prettyJSON());
 app.use(trimTrailingSlash());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const routes = app.route("/articles", ArticleApp).route("/notes", NoteApp);
+
 export const GET = handle(app);
 export const POST = handle(app);
 
-export type AppType = typeof app;
+export type AppType = typeof routes;
