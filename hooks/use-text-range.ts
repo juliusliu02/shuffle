@@ -28,6 +28,7 @@ const getGlobalOffset = (
 export const useTextRange = () => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [selectedTexts, setSelectedTexts] = React.useState<string[]>([]);
+  const [selectedNodes, setSelectedNodes] = React.useState<Node[]>([]);
   const [selectedRanges, setSelectedRanges] = React.useState<GlobalRange[]>([]);
 
   const getOffsets = React.useCallback(() => {
@@ -39,6 +40,7 @@ export const useTextRange = () => {
 
     // reset upon change
     setSelectedTexts([]);
+    setSelectedNodes([]);
     setSelectedRanges([]);
 
     const sel = window.getSelection();
@@ -69,12 +71,21 @@ export const useTextRange = () => {
       // update text and range
       setSelectedTexts((prev) => [...prev, range.toString()]);
       setSelectedRanges((prev) => [...prev, { startOffset, endOffset }]);
+      setSelectedNodes((prev) => {
+        const newArray = [...prev];
+        if (!newArray.includes(range.startContainer))
+          newArray.push(range.startContainer);
+        if (!newArray.includes(range.endContainer))
+          newArray.push(range.endContainer);
+        return newArray;
+      });
     }
   }, []);
 
   return {
     containerRef,
     selectedTexts,
+    selectedNodes,
     selectedRanges,
     getOffsets,
   };

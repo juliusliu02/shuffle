@@ -8,6 +8,7 @@ import { InferRequestType } from "hono";
 import useSWR from "swr";
 import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
+import Notes from "@/components/note";
 
 const Page = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,8 +28,13 @@ const Page = () => {
     fetcher({ param: { id } }),
   );
 
-  const { containerRef, selectedTexts, selectedRanges, getOffsets } =
-    useTextRange();
+  const {
+    containerRef,
+    selectedTexts,
+    selectedNodes,
+    selectedRanges,
+    getOffsets,
+  } = useTextRange();
 
   // attach event listener
   useEffect(() => {
@@ -50,6 +56,11 @@ const Page = () => {
     const note = {
       entry: selectedTexts.join(" ... "),
       highlights: selectedRanges,
+      context: selectedNodes
+        .map((node) => node.textContent)
+        .join(" ") // segmenter preserves white space but there is no whitespace across paragraphs
+        .replaceAll(/ +/g, " ") // remove extra whitespaces
+        .trim(),
     };
 
     if (selectedRanges.length === 0) {
@@ -67,12 +78,25 @@ const Page = () => {
   };
 
   return (
-    <div className="max-w-xl mt-12 mx-auto">
-      <Article article={data} ref={containerRef} />
-      <Button className="fixed bottom-4 right-4" onClick={handleClick}>
-        Add notes
-      </Button>
-    </div>
+    <main className="flex flex-col gap-12 items-center px-4">
+      <div
+        className="mt-12 max-w-lg
+        md:mr-96 md:ml-[clamp(3rem,20vw-8rem,24rem)]"
+        /* 24rem to leave room for the sidebar width plus space around it.
+         * left margin grow from 3rem to 24rem while right margin remains as 24rem.
+         * -8rem acts as an offset to let left margin start out lower.
+         * This ensures smooth and continuous change of left margin over the breakpoints.
+         * */
+      >
+        <Article article={data} ref={containerRef} />
+        <Button className="fixed bottom-4 right-4" onClick={handleClick}>
+          Add notes
+        </Button>
+      </div>
+      <aside className="relative w-full max-w-lg md:absolute md:w-[max(16rem,15vw)] md:top-14 md:right-12">
+        <Notes notes={data.notes} />
+      </aside>
+    </main>
   );
 };
 

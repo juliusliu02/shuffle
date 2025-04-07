@@ -16,6 +16,8 @@ export const notesTable = sqliteTable("notes_table", {
   articleId: int()
     .references(() => articlesTable.id)
     .notNull(),
+  type: text(),
+  context: text().notNull(),
   note: text(),
 });
 
@@ -28,12 +30,6 @@ export const highlightsTable = sqliteTable("highlights_table", {
     .notNull(),
   startOffset: int().notNull(),
   endOffset: int().notNull(),
-});
-
-export const cardsTable = sqliteTable("cards_table", {
-  id: int().primaryKey({ autoIncrement: true }),
-  noteId: int().references(() => notesTable.id, { onDelete: "set null" }),
-  context: text().notNull(),
 });
 
 export const notesRelation = relations(notesTable, ({ one, many }) => ({

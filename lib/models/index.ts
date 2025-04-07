@@ -20,9 +20,6 @@ export type HighlightInsert = Omit<
   "id"
 >;
 
-export type Card = typeof schema.cardsTable.$inferSelect;
-export type CardInsert = Omit<typeof schema.cardsTable.$inferInsert, "id">;
-
 type Schema = typeof schema;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
