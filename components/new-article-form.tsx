@@ -21,6 +21,16 @@ import { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
 
+const $post = honoClient.api.articles.$post;
+
+const createArticle = async (
+  _key: string,
+  { arg }: { arg: InferRequestType<typeof $post> },
+) => {
+  const response = await $post(arg);
+  return await response.json();
+};
+
 const NewArticleForm = () => {
   const form = useForm<z.input<typeof createArticleSchema>>({
     resolver: zodResolver(createArticleSchema),
@@ -31,14 +41,6 @@ const NewArticleForm = () => {
     },
   });
 
-  const $post = honoClient.api.articles.$post;
-  const createArticle = async (
-    _key: string,
-    { arg }: { arg: InferRequestType<typeof $post> },
-  ) => {
-    const response = await $post(arg);
-    return await response.json();
-  };
   const { trigger, isMutating } = useSWRMutation(
     "/api/articles",
     createArticle,

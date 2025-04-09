@@ -1,6 +1,9 @@
 import { db } from "@/lib/db";
 import { notesTable } from "@/lib/db/schema";
 import { NoteInsert } from "@/lib/models";
+import { eq } from "drizzle-orm";
+import { updateNoteSchema } from "@/lib/controllers/notes.schema";
+import { z } from "zod";
 
 export const createNote = async (note: NoteInsert) => {
   return db
@@ -9,4 +12,22 @@ export const createNote = async (note: NoteInsert) => {
       ...note,
     })
     .returning();
+};
+
+export const updateNote = async (
+  id: number,
+  data: z.infer<typeof updateNoteSchema>,
+) => {
+  return db
+    .update(notesTable)
+    .set(data)
+    .where(eq(notesTable.id, id))
+    .returning();
+};
+
+export const deleteNote = async (id: number) => {
+  return db
+    .delete(notesTable)
+    .where(eq(notesTable.id, id))
+    .returning({ id: notesTable.id });
 };

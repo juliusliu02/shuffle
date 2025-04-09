@@ -6,9 +6,11 @@ import { notFound, useParams } from "next/navigation";
 import { honoClient } from "@/lib/rpc/hono-client";
 import { InferRequestType } from "hono";
 import useSWR from "swr";
+import { mutate as globalMutate } from "swr";
 import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
 import Notes from "@/components/note";
+import { ArticleWithNotesAndHighlights } from "@/lib/models";
 
 const Page = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,7 +73,21 @@ const Page = () => {
       const response = await honoClient.api.notes.$post({
         json: { ...note, articleId: Number(id) },
       });
-      console.log(await response.json());
+
+      // TODO: add error toast
+      if (!response.ok) return;
+      const data = await response.json();
+      await globalMutate(
+        `/api/articles/${id}`,
+        (old: ArticleWithNotesAndHighlights | undefined) => {
+          if (!old) return old; // first load hasn’t finished yet
+          return {
+            ...old,
+            notes: [...old.notes, data.note],
+          };
+        },
+        false, // don’t revalidate; we already have the right data
+      );
     } catch (error) {
       console.error(error);
     }
@@ -89,11 +105,14 @@ const Page = () => {
          * */
       >
         <Article article={data} ref={containerRef} />
-        <Button className="fixed bottom-4 right-4" onClick={handleClick}>
+        <Button
+          className="fixed bottom-4 right-4 z-10 bg-amber-800 hover:bg-amber-900"
+          onClick={handleClick}
+        >
           Add notes
         </Button>
       </div>
-      <aside className="relative w-full max-w-lg md:absolute md:w-[max(16rem,15vw)] md:top-14 md:right-12">
+      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:top-14 md:right-12">
         <Notes notes={data.notes} />
       </aside>
     </main>

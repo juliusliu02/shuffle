@@ -130,4 +130,7 @@
   mark {
     @apply bg-amber-300 px-1 py-0.5 rounded-md shadow-sm shadow-amber-300/50 box-decoration-clone;
   }
+  button {
+    @apply cursor-pointer;
+  }
 }
