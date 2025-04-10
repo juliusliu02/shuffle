@@ -13,18 +13,19 @@ import { honoClient } from "@/lib/rpc/hono-client";
 import { ArticleWithNotesAndHighlights } from "@/lib/models";
 import { toast } from "sonner";
 
+const $get = honoClient.api.articles[":id"].$get;
+
+const fetcher = (arg: InferRequestType<typeof $get>) => async () => {
+  const res = await $get(arg);
+  if (!res.ok) {
+    const { error: errorMessage } = await res.json();
+    throw new Error(errorMessage);
+  }
+  return await res.json();
+};
+
 const Page = () => {
   const { id } = useParams<{ id: string }>();
-  const $get = honoClient.api.articles[":id"].$get;
-
-  const fetcher = (arg: InferRequestType<typeof $get>) => async () => {
-    const res = await $get(arg);
-    if (!res.ok) {
-      const { error: errorMessage } = await res.json();
-      throw new Error(errorMessage);
-    }
-    return await res.json();
-  };
 
   const { data, error, isLoading } = useSWR(
     `/api/articles/${id}`,
@@ -94,6 +95,7 @@ const Page = () => {
         },
         false, // don’t revalidate; we already have the right data
       );
+      toast.success("Note created successfully.");
     } catch (error) {
       let errorMsg = "Failed to add note.";
       if (error instanceof Error) {
@@ -104,7 +106,7 @@ const Page = () => {
   };
 
   return (
-    <main className="flex flex-col gap-12 items-center px-4">
+    <main className="flex flex-col gap-12 items-center px-4 relative">
       <div
         className="mt-12 max-w-lg
         md:mr-96 md:ml-[clamp(3rem,20vw-8rem,24rem)]"
@@ -122,7 +124,7 @@ const Page = () => {
           Add notes
         </Button>
       </div>
-      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:top-14 md:right-12">
+      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:top-12 md:right-12">
         <Notes notes={data.notes} />
       </aside>
     </main>

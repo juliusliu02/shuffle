@@ -30,43 +30,46 @@ const Note = ({ note }: { note: NoteType }) => {
   const [edit, setEdit] = React.useState<boolean>(false);
   const { trigger, isMutating } = useSWRMutation(url, fetcher);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const fieldsToUpdate = Object.fromEntries(new FormData(e.currentTarget));
+  const handleSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      const fieldsToUpdate = Object.fromEntries(new FormData(e.currentTarget));
 
-    await trigger(
-      {
-        param: { id: note.id.toString() },
-        json: fieldsToUpdate,
-      },
-      {
-        // update based on current content to avoid extra get.
-        onSuccess: () => {
-          globalMutate(
-            `/api/articles/${note.articleId}`,
-            (old: ArticleWithNotesAndHighlights | undefined) => {
-              if (!old) return old; // first load hasn’t finished yet
-              return {
-                ...old,
-                notes: old.notes.map((n) =>
-                  n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
-                ),
-              };
-            },
-            false, // don’t revalidate; we already have the right data
-          );
+      await trigger(
+        {
+          param: { id: note.id.toString() },
+          json: fieldsToUpdate,
         },
-        onError: (error) => {
-          if (error instanceof Error) {
-            toast.error(error.message);
-            return;
-          }
-          toast.error("An error occurred while saving your note.");
+        {
+          // update based on current content to avoid extra get.
+          onSuccess: () => {
+            globalMutate(
+              `/api/articles/${note.articleId}`,
+              (old: ArticleWithNotesAndHighlights | undefined) => {
+                if (!old) return old; // first load hasn’t finished yet
+                return {
+                  ...old,
+                  notes: old.notes.map((n) =>
+                    n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
+                  ),
+                };
+              },
+              false, // don’t revalidate; we already have the right data
+            );
+          },
+          onError: (error) => {
+            if (error instanceof Error) {
+              toast.error(error.message);
+              return;
+            }
+            toast.error("An error occurred while saving your note.");
+          },
         },
-      },
-    );
-    setEdit(false);
-  };
+      );
+      setEdit(false);
+    },
+    [note.articleId, note.id, trigger],
+  );
 
   const handleDelete = useCallback(async () => {
     const response = await $delete({
@@ -96,19 +99,19 @@ const Note = ({ note }: { note: NoteType }) => {
         onSubmit={handleSubmit}
       >
         <input
-          className="text-xl font-semibold w-full -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
+          className="text-xl font-semibold -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
           placeholder="Entry"
           name="entry"
           defaultValue={note.entry}
         />
         <input
-          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 w-full focus-visible:bg-stone-200/50 transition"
+          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 transition"
           name="type"
           defaultValue={note.type ? note.type : undefined}
           placeholder={"Category"}
         />
         <textarea
-          className="my-4 w-full resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
+          className="my-4 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
@@ -142,14 +145,16 @@ const Note = ({ note }: { note: NoteType }) => {
       className="hover:bg-stone-100 p-4 sm:rounded-xl transition hover:not-focus:cursor-pointer group"
       onClick={() => setEdit(true)}
     >
-      <div className="flex justify-between">
-        <dt className="text-wrap font-semibold text-xl">{note.entry}</dt>
+      <div className="flex justify-between items-center">
+        <dt className="text-xl text-wrap font-semibold">{note.entry}</dt>
         <PencilLine className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity" />
       </div>
-      {note.type && (
-        <div className="text-muted-foreground my-2">{note.type}</div>
-      )}
-      {note.note && <dd className="mt-4">{note.note}</dd>}
+      <div className="pl-4 border-l-4 has-[*]:mt-4">
+        {note.type && (
+          <div className="text-muted-foreground my-2">{note.type}</div>
+        )}
+        {note.note && <dd className="mt-4">{note.note}</dd>}
+      </div>
     </div>
   );
 };
@@ -160,7 +165,8 @@ const Notes = ({ notes }: NotesProps) => {
   );
 
   return (
-    <div className="-m-4 md:m-0">
+    // translate y to align with article heading
+    <div className="-m-4 md:m-0 translate-y-0.5">
       <header className="mb-6 mx-4">
         <h2 className="font-bold text-2xl">My notes</h2>
       </header>
