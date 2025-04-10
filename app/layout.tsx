@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, EB_Garamond } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/navbar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,6 +29,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${ebGaramond.variable} font-sans antialiased bg-stone-50 dark:bg-stone-800`}
       >
+        <div className="w-full">
+          <Navbar />
+        </div>
         {children}
         <Toaster richColors position="top-right" />
       </body>
