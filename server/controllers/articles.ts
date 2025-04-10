@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { createArticleSchema } from "@/lib/controllers/articles.schema";
+import { createArticleSchema } from "@/lib/schemas/articles";
 import { zValidator } from "@hono/zod-validator";
-import * as articleSerivce from "@/lib/services/articles";
+import * as articleSerivce from "@/server/services/articles";
 
 const ArticleApp = new Hono()
   .get("/", async (c) => {

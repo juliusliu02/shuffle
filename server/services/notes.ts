@@ -1,8 +1,8 @@
-import { db } from "@/lib/db";
-import { notesTable } from "@/lib/db/schema";
+import { db } from "../db";
+import { notesTable } from "@/server/db/schema";
 import { NoteInsert } from "@/lib/models";
 import { eq } from "drizzle-orm";
-import { updateNoteSchema } from "@/lib/controllers/notes.schema";
+import { updateNoteSchema } from "@/lib/schemas/notes";
 import { z } from "zod";
 
 export const createNote = async (note: NoteInsert) => {

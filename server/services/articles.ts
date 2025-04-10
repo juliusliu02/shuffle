@@ -1,6 +1,6 @@
 import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/models";
-import { db } from "@/lib/db";
-import { articlesTable } from "@/lib/db/schema";
+import { db } from "../db";
+import { articlesTable } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const createArticle = async (data: ArticleInsert) => {

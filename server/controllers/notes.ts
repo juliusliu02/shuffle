@@ -4,9 +4,9 @@ import {
   createNoteWithHighlightSchema,
   deleteNoteSchema,
   updateNoteSchema,
-} from "@/lib/controllers/notes.schema";
-import * as noteService from "@/lib/services/notes";
-import * as highlightService from "@/lib/services/highlights";
+} from "@/lib/schemas/notes";
+import * as noteService from "@/server/services/notes";
+import * as highlightService from "@/server/services/highlights";
 import { NoteWithHighlights } from "@/lib/models";
 
 const NoteApp = new Hono()

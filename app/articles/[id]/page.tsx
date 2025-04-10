@@ -3,14 +3,15 @@ import React, { useEffect } from "react";
 import { Article } from "@/components/article";
 import { Button } from "@/components/ui/button";
 import { notFound, useParams } from "next/navigation";
-import { honoClient } from "@/lib/rpc/hono-client";
 import { InferRequestType } from "hono";
 import useSWR from "swr";
 import { mutate as globalMutate } from "swr";
 import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
 import Notes from "@/components/note";
+import { honoClient } from "@/lib/rpc/hono-client";
 import { ArticleWithNotesAndHighlights } from "@/lib/models";
+import { toast } from "sonner";
 
 const Page = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +30,12 @@ const Page = () => {
     `/api/articles/${id}`,
     fetcher({ param: { id } }),
   );
+
+  useEffect(() => {
+    if (data) {
+      document.title = `${data.title} | Shuffle`;
+    }
+  }, [data]);
 
   const {
     containerRef,
@@ -74,7 +81,6 @@ const Page = () => {
         json: { ...note, articleId: Number(id) },
       });
 
-      // TODO: add error toast
       if (!response.ok) return;
       const data = await response.json();
       await globalMutate(
@@ -89,7 +95,11 @@ const Page = () => {
         false, // don’t revalidate; we already have the right data
       );
     } catch (error) {
-      console.error(error);
+      let errorMsg = "Failed to add note.";
+      if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      toast.error(errorMsg);
     }
   };
 
@@ -106,7 +116,7 @@ const Page = () => {
       >
         <Article article={data} ref={containerRef} />
         <Button
-          className="fixed bottom-4 right-4 z-10 bg-amber-800 hover:bg-amber-900"
+          className="fixed bottom-4 right-4 z-10 bg-amber-300 hover:bg-amber-400 text-slate-800"
           onClick={handleClick}
         >
           Add notes

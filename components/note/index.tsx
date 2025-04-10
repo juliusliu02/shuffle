@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useCallback } from "react";
 import {
   ArticleWithNotesAndHighlights,
   NoteWithHighlights as NoteType,
@@ -9,6 +9,7 @@ import { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { mutate as globalMutate } from "swr";
 import { PencilLine, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 type NotesProps = {
   notes: NoteType[];
@@ -33,39 +34,41 @@ const Note = ({ note }: { note: NoteType }) => {
     e.preventDefault();
     const fieldsToUpdate = Object.fromEntries(new FormData(e.currentTarget));
 
-    try {
-      await trigger(
-        {
-          param: { id: note.id.toString() },
-          json: fieldsToUpdate,
+    await trigger(
+      {
+        param: { id: note.id.toString() },
+        json: fieldsToUpdate,
+      },
+      {
+        // update based on current content to avoid extra get.
+        onSuccess: () => {
+          globalMutate(
+            `/api/articles/${note.articleId}`,
+            (old: ArticleWithNotesAndHighlights | undefined) => {
+              if (!old) return old; // first load hasn’t finished yet
+              return {
+                ...old,
+                notes: old.notes.map((n) =>
+                  n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
+                ),
+              };
+            },
+            false, // don’t revalidate; we already have the right data
+          );
         },
-        {
-          // update based on current content to avoid extra get.
-          onSuccess: () => {
-            globalMutate(
-              `/api/articles/${note.articleId}`,
-              (old: ArticleWithNotesAndHighlights | undefined) => {
-                if (!old) return old; // first load hasn’t finished yet
-                return {
-                  ...old,
-                  notes: old.notes.map((n) =>
-                    n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
-                  ),
-                };
-              },
-              false, // don’t revalidate; we already have the right data
-            );
-          },
+        onError: (error) => {
+          if (error instanceof Error) {
+            toast.error(error.message);
+            return;
+          }
+          toast.error("An error occurred while saving your note.");
         },
-      );
-      setEdit(false);
-    } catch (e) {
-      console.log(e);
-    }
+      },
+    );
+    setEdit(false);
   };
 
-  const handleDelete = async () => {
-    console.log("here");
+  const handleDelete = useCallback(async () => {
     const response = await $delete({
       param: {
         id: note.id.toString(),
@@ -82,8 +85,9 @@ const Note = ({ note }: { note: NoteType }) => {
           };
         },
       );
+      toast.success("Note deleted successfully.");
     }
-  };
+  }, [note.articleId, note.id]);
 
   if (edit) {
     return (
@@ -92,25 +96,28 @@ const Note = ({ note }: { note: NoteType }) => {
         onSubmit={handleSubmit}
       >
         <input
-          className="text-xl font-semibold"
+          className="text-xl font-semibold w-full -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
           placeholder="Entry"
           name="entry"
           defaultValue={note.entry}
         />
         <input
-          className="mt-2"
+          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 w-full focus-visible:bg-stone-200/50 transition"
           name="type"
           defaultValue={note.type ? note.type : undefined}
           placeholder={"Category"}
         />
         <textarea
-          className="my-4 w-full resize-none"
+          className="my-4 w-full resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
         />
         <div className="flex justify-between">
-          <Button variant="destructive" onClick={handleDelete}>
+          <Button
+            onClick={handleDelete}
+            className="bg-amber-800 hover:bg-amber-900"
+          >
             <Trash2 />
           </Button>
           <div className="self-end flex gap-2">
@@ -118,7 +125,7 @@ const Note = ({ note }: { note: NoteType }) => {
               Cancel
             </Button>
             <Button
-              className={"bg-amber-800 hover:bg-amber-900"}
+              className={"bg-amber-300 hover:bg-amber-400 text-slate-800"}
               type={"submit"}
               disabled={isMutating}
             >

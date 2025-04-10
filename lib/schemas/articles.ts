@@ -1,8 +1,6 @@
-import { createInsertSchema } from "drizzle-zod";
-import { articlesTable } from "@/lib/db/schema";
 import { z } from "zod";
 
-export const createArticleSchema = createInsertSchema(articlesTable, {
+export const createArticleSchema = z.object({
   title: z.string().trim(),
   body: z
     .string()

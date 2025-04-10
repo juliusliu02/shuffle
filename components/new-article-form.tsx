@@ -13,15 +13,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { createArticleSchema } from "@/lib/controllers/articles.schema";
+import { createArticleSchema } from "@/lib/schemas/articles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { honoClient } from "@/lib/rpc/hono-client";
 import { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const $post = honoClient.api.articles.$post;
+type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
 
 const createArticle = async (
   _key: string,
@@ -42,22 +44,23 @@ const NewArticleForm = () => {
   });
 
   const { trigger, isMutating } = useSWRMutation(
-    "/api/articles",
+    "createArticle",
     createArticle,
   );
   const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof createArticleSchema>) => {
     try {
-      const response = await trigger({
+      const response: CreateArticleResponse = await trigger({
         json: values,
       });
-      console.log(response);
-      if (response.id) {
-        router.push(`/articles/${response.id}`);
-      }
+      router.push(`/articles/${response.id}`);
     } catch (error) {
-      console.error(error);
+      let errorMsg = "Please try again later.";
+      if (error instanceof Error) {
+        errorMsg = error.message;
+      }
+      toast.error("Error creating article", { description: errorMsg });
     }
   };
 

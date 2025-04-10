@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { Inter, EB_Garamond } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,6 +29,7 @@ export default function RootLayout({
         className={`${inter.variable} ${ebGaramond.variable} font-sans antialiased bg-stone-50 dark:bg-stone-800`}
       >
         {children}
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

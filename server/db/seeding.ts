@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql";
-import { articlesTable } from "@/lib/db/schema";
+import { articlesTable } from "@/server/db/schema";
 
 const db = drizzle(process.env.DB_FILE_NAME!);
 

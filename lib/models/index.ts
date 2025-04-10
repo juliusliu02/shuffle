@@ -3,7 +3,7 @@ import type {
   DBQueryConfig,
   ExtractTablesWithRelations,
 } from "drizzle-orm";
-import * as schema from "@/lib/db/schema";
+import * as schema from "@/server/db/schema";
 
 export type Article = typeof schema.articlesTable.$inferSelect;
 export type ArticleInsert = Omit<

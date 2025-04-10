@@ -5,8 +5,8 @@ import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { handle } from "hono/vercel";
-import ArticleApp from "@/lib/controllers/articles";
-import NoteApp from "@/lib/controllers/notes";
+import ArticleApp from "@/server/controllers/articles";
+import NoteApp from "@/server/controllers/notes";
 
 // edge runtime doesn't support file link
 // export const runtime = "edge";
