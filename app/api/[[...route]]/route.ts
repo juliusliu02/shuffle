@@ -19,7 +19,7 @@ app.use(logger());
 app.use(prettyJSON());
 app.use(trimTrailingSlash());
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- declare for type
 const routes = app.route("/articles", ArticleApp).route("/notes", NoteApp);
 
 export const GET = handle(app);
