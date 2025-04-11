@@ -7,7 +7,7 @@ import {
 } from "@/lib/schemas/notes";
 import * as noteService from "@/server/services/notes";
 import * as highlightService from "@/server/services/highlights";
-import { NoteWithHighlights } from "@/lib/models";
+import { NoteWithHighlights } from "@/lib/types";
 
 const NoteApp = new Hono()
   .post("/", zValidator("json", createNoteWithHighlightSchema), async (c) => {

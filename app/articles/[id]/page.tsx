@@ -10,7 +10,7 @@ import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
 import Notes from "@/components/note";
 import { honoClient } from "@/lib/rpc/hono-client";
-import { ArticleWithNotesAndHighlights } from "@/lib/models";
+import { ArticleWithNotesAndHighlights } from "@/lib/types";
 import { toast } from "sonner";
 
 const $get = honoClient.api.articles[":id"].$get;

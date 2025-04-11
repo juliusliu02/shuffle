@@ -1,6 +1,6 @@
-import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/models";
+import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/types";
 import { db } from "../db";
-import { articlesTable } from "@/server/db/schema";
+import { articlesTable } from "@/server/db/schema/articles";
 import { eq } from "drizzle-orm";
 
 export const createArticle = async (data: ArticleInsert) => {
@@ -29,4 +29,8 @@ export const getArticles = async () => {
   return db
     .select({ id: articlesTable.id, title: articlesTable.title })
     .from(articlesTable);
+};
+
+export const deleteArticle = async (id: number) => {
+  return db.delete(articlesTable).where(eq(articlesTable.id, id));
 };

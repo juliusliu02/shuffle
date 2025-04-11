@@ -15,7 +15,7 @@ const ArticleApp = new Hono()
   })
   .get("/:id", async (c) => {
     const { id } = c.req.param();
-    const articleId = parseInt(id);
+    const articleId = Number(id);
     if (isNaN(articleId)) {
       return c.json({ error: "Invalid article id" }, 400);
     }
@@ -25,6 +25,21 @@ const ArticleApp = new Hono()
       return c.json({ error: "Article not found" }, 404);
     }
     return c.json(article, 200);
+  })
+  .delete("/:id", async (c) => {
+    const { id } = c.req.param();
+    const articleId = Number(id);
+    if (isNaN(articleId)) {
+      return c.json({ error: "Invalid article id" }, 400);
+    }
+
+    try {
+      await articleSerivce.deleteArticle(articleId);
+      return c.body(null, 204);
+    } catch (e) {
+      console.log(e);
+      return c.json({ error: "Failed to delete article" }, 400);
+    }
   });
 
 export default ArticleApp;

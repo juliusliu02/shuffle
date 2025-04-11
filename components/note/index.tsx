@@ -2,7 +2,7 @@ import React, { FormEvent, useCallback } from "react";
 import {
   ArticleWithNotesAndHighlights,
   NoteWithHighlights as NoteType,
-} from "@/lib/models";
+} from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { honoClient } from "@/lib/rpc/hono-client";
 import { InferRequestType } from "hono";

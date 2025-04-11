@@ -1,5 +1,5 @@
 import React from "react";
-import type { ArticleListItem as ArticleListItemType } from "@/lib/models";
+import type { ArticleListItem as ArticleListItemType } from "@/lib/types";
 import Link from "next/link";
 
 type ArticleListProps = {

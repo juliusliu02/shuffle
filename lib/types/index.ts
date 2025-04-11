@@ -4,25 +4,32 @@ import type {
   ExtractTablesWithRelations,
 } from "drizzle-orm";
 // ensure this is a type-only file
-import type * as schema from "@/server/db/schema";
+import type * as articleSchema from "@/server/db/schema/articles";
+import type * as authSchema from "@/server/db/schema/auth";
 
-export type Article = typeof schema.articlesTable.$inferSelect;
+export type Article = typeof articleSchema.articlesTable.$inferSelect;
 export type ArticleInsert = Omit<
-  typeof schema.articlesTable.$inferInsert,
+  typeof articleSchema.articlesTable.$inferInsert,
   "id"
 >;
 export type ArticleListItem = Pick<Article, "id" | "title">;
 
-export type Note = typeof schema.notesTable.$inferSelect;
-export type NoteInsert = Omit<typeof schema.notesTable.$inferInsert, "id">;
-
-export type Highlight = typeof schema.highlightsTable.$inferSelect;
-export type HighlightInsert = Omit<
-  typeof schema.highlightsTable.$inferInsert,
+export type Note = typeof articleSchema.notesTable.$inferSelect;
+export type NoteInsert = Omit<
+  typeof articleSchema.notesTable.$inferInsert,
   "id"
 >;
 
-type Schema = typeof schema;
+export type Highlight = typeof articleSchema.highlightsTable.$inferSelect;
+export type HighlightInsert = Omit<
+  typeof articleSchema.highlightsTable.$inferInsert,
+  "id"
+>;
+
+export type User = typeof authSchema.userTable.$inferSelect;
+export type Session = typeof authSchema.sessionTable.$inferSelect;
+
+type Schema = typeof articleSchema;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
 // Reference: https://github.com/drizzle-team/drizzle-orm/issues/695#issuecomment-1881454650

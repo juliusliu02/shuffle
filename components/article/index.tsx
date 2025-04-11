@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { ArticleWithNotesAndHighlights, Highlight } from "@/lib/models";
+import { ArticleWithNotesAndHighlights, Highlight } from "@/lib/types";
 
 type WithClass = {
   className?: string;

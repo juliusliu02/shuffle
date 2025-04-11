@@ -1,6 +1,6 @@
 import { db } from "../db";
-import { notesTable } from "@/server/db/schema";
-import { NoteInsert } from "@/lib/models";
+import { notesTable } from "@/server/db/schema/articles";
+import { NoteInsert } from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { updateNoteSchema } from "@/lib/schemas/notes";
 import { z } from "zod";
