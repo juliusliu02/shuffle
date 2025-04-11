@@ -26,7 +26,10 @@ export type HighlightInsert = Omit<
   "id"
 >;
 
-export type User = typeof authSchema.userTable.$inferSelect;
+export type User = Omit<
+  typeof authSchema.userTable.$inferSelect,
+  "hashedPassword"
+>;
 export type Session = typeof authSchema.sessionTable.$inferSelect;
 
 type Schema = typeof articleSchema;

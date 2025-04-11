@@ -1,0 +1,19 @@
+import { createMiddleware } from "hono/factory";
+import { getSessionCookie } from "@/server/utils/cookie";
+import { validateSessionToken } from "@/server/services/auth";
+
+export const requireAuth = () => {
+  return createMiddleware(async (c, next) => {
+    const token = await getSessionCookie(c);
+    if (!token) {
+      return c.json({ error: "Not authorized." }, 403);
+    }
+
+    const { user } = await validateSessionToken(token);
+    if (!user) {
+      return c.json({ error: "Not authorized." }, 403);
+    }
+    c.set("user", user);
+    await next();
+  });
+};

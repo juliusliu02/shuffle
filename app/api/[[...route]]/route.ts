@@ -1,28 +1,20 @@
 import { Hono } from "hono";
-import { csrf } from "hono/csrf";
-import { cors } from "hono/cors";
-import { logger } from "hono/logger";
-import { prettyJSON } from "hono/pretty-json";
-import { trimTrailingSlash } from "hono/trailing-slash";
+
 import { handle } from "hono/vercel";
 import ArticleApp from "@/server/controllers/articles";
 import NoteApp from "@/server/controllers/notes";
+import { requireAuth } from "@/server/middlewares/auth";
+import { initGlobalMiddleware } from "@/server/middlewares";
 
 // edge runtime doesn't support file link
 // export const runtime = "edge";
 
-const app = new Hono().basePath("/api");
+const app = initGlobalMiddleware(new Hono().basePath("/api"));
 
-if (process.env.NODE_ENV === "production") {
-  app.use(csrf());
-}
-app.use(cors());
-app.use(logger());
-app.use(prettyJSON());
-app.use(trimTrailingSlash());
+app.use(requireAuth());
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars -- declare for type
-const routes = app.route("/articles", ArticleApp).route("/notes", NoteApp);
+const routes = app.route("/notes", NoteApp).route("/articles", ArticleApp);
 
 export const GET = handle(app);
 export const POST = handle(app);
