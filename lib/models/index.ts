@@ -3,13 +3,15 @@ import type {
   DBQueryConfig,
   ExtractTablesWithRelations,
 } from "drizzle-orm";
-import * as schema from "@/server/db/schema";
+// ensure this is a type-only file
+import type * as schema from "@/server/db/schema";
 
 export type Article = typeof schema.articlesTable.$inferSelect;
 export type ArticleInsert = Omit<
   typeof schema.articlesTable.$inferInsert,
   "id"
 >;
+export type ArticleListItem = Pick<Article, "id" | "title">;
 
 export type Note = typeof schema.notesTable.$inferSelect;
 export type NoteInsert = Omit<typeof schema.notesTable.$inferInsert, "id">;

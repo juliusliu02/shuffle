@@ -108,7 +108,7 @@ const Page = () => {
   return (
     <main className="flex flex-col gap-12 items-center px-4 relative">
       <div
-        className="mt-12 max-w-lg
+        className="max-w-lg
         md:mr-96 md:ml-[clamp(3rem,20vw-8rem,24rem)]"
         /* 24rem to leave room for the sidebar width plus space around it.
          * left margin grow from 3rem to 24rem while right margin remains as 24rem.
@@ -124,7 +124,7 @@ const Page = () => {
           Add notes
         </Button>
       </div>
-      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:top-12 md:right-12">
+      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:right-12">
         <Notes notes={data.notes} />
       </aside>
     </main>

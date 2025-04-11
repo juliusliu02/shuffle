@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${ebGaramond.variable} font-sans antialiased bg-stone-50 dark:bg-stone-800`}
       >
-        <div className="w-full">
+        <div className="w-full mb-12">
           <Navbar />
         </div>
         {children}

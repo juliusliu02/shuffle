@@ -11,7 +11,9 @@ import Link from "next/link";
 const Navbar = () => {
   return (
     <div className="flex justify-between px-8 py-4 bg-white">
-      <p className="text-2xl font-semibold">Shuffle</p>
+      <Link href="/" className="text-2xl font-semibold">
+        Shuffle
+      </Link>
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>

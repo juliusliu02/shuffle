@@ -5,6 +5,7 @@ export const createArticleSchema = z.object({
   body: z
     .string()
     .trim()
-    .transform((val) => val.replace(/\r\n/, "\n").replaceAll(/\n+/, "\n")),
+    .min(200)
+    .transform((val) => val.replace(/\r\n/g, "\n").replaceAll(/\n+/g, "\n")),
   source: z.string().optional(),
 });

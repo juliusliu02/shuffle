@@ -13,7 +13,9 @@ import NoteApp from "@/server/controllers/notes";
 
 const app = new Hono().basePath("/api");
 
-app.use(csrf());
+if (process.env.NODE_ENV === "production") {
+  app.use(csrf());
+}
 app.use(cors());
 app.use(logger());
 app.use(prettyJSON());
