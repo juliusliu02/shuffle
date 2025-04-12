@@ -74,7 +74,7 @@ const Page = () => {
     };
 
     if (selectedRanges.length === 0) {
-      return;
+      toast.warning("You haven't selected words to highlight.");
     }
 
     try {
@@ -106,7 +106,7 @@ const Page = () => {
   };
 
   return (
-    <main className="flex flex-col gap-12 items-center px-4 relative">
+    <main className="flex flex-col gap-12 items-center px-4 relative mt-32">
       <div
         className="max-w-lg
         md:mr-96 md:ml-[clamp(3rem,20vw-8rem,24rem)]"

@@ -33,7 +33,7 @@ const Page = () => {
   }
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-xl mx-auto mt-32">
       <PageTitle>My articles</PageTitle>
       <ArticleList articles={articles} />
     </div>
