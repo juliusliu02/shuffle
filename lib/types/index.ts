@@ -20,6 +20,10 @@ export type NoteInsert = Omit<
   "id"
 >;
 
+export type NoteInsertWithHighlights = NoteInsert & {
+  highlights: Omit<HighlightInsert, "noteId">[];
+};
+
 export type Highlight = typeof articleSchema.highlightsTable.$inferSelect;
 export type HighlightInsert = Omit<
   typeof articleSchema.highlightsTable.$inferInsert,

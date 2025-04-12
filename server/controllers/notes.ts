@@ -6,24 +6,15 @@ import {
   updateNoteSchema,
 } from "@/lib/schemas/notes";
 import * as noteService from "@/server/services/notes";
-import * as highlightService from "@/server/services/highlights";
-import { NoteWithHighlights } from "@/lib/types";
+import { NoteInsertWithHighlights } from "@/lib/types";
 import { requireAuth } from "@/server/middlewares/auth";
 
 const NoteApp = new Hono()
   .use(requireAuth())
   .post("/", zValidator("json", createNoteWithHighlightSchema), async (c) => {
-    const validatedFields = c.req.valid("json");
-    const { highlights, ...note } = validatedFields;
-    const newNote = (await noteService.createNote(note))[0];
-    const newHighlights = await highlightService.createHighlights(
-      highlights.map((highlight) => ({ noteId: newNote.id, ...highlight })),
-    );
-    const noteWithHighlights: NoteWithHighlights = {
-      ...newNote,
-      highlights: newHighlights,
-    };
-    return c.json({ note: noteWithHighlights }, 201);
+    const validatedFields: NoteInsertWithHighlights = c.req.valid("json");
+    const note = await noteService.createNote(validatedFields);
+    return c.json({ note }, 201);
   })
   .put("/:id", zValidator("json", updateNoteSchema), async (c) => {
     const id = Number(c.req.param("id"));

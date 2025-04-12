@@ -1,17 +1,38 @@
 import { db } from "../db";
-import { notesTable } from "@/server/db/schema/articles";
-import { NoteInsert } from "@/lib/types";
+import { highlightsTable, notesTable } from "@/server/db/schema/articles";
+import {
+  HighlightInsert,
+  NoteInsertWithHighlights,
+  NoteWithHighlights,
+  Highlight,
+} from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { updateNoteSchema } from "@/lib/schemas/notes";
 import { z } from "zod";
 
-export const createNote = async (note: NoteInsert) => {
-  return db
-    .insert(notesTable)
-    .values({
-      ...note,
-    })
+export const createNote = async (
+  data: NoteInsertWithHighlights,
+): Promise<NoteWithHighlights> => {
+  const { highlights, ...noteData } = data;
+
+  const note = (
+    await db
+      .insert(notesTable)
+      .values({
+        ...noteData,
+      })
+      .returning()
+  )[0];
+
+  const highlightsData: HighlightInsert[] = highlights.map((h) => ({
+    ...h,
+    noteId: note.id,
+  }));
+  const newHighlights: Highlight[] = await db
+    .insert(highlightsTable)
+    .values(highlightsData)
     .returning();
+  return { ...note, highlights: newHighlights };
 };
 
 export const updateNote = async (
