@@ -1,9 +1,16 @@
 import { createMiddleware } from "hono/factory";
 import { getSessionCookie } from "@/server/utils/cookie";
 import { validateSessionToken } from "@/server/services/auth";
+import { User } from "@/lib/types";
+
+type AuthVariable = {
+  user: User;
+};
 
 export const requireAuth = () => {
-  return createMiddleware(async (c, next) => {
+  return createMiddleware<{
+    Variables: AuthVariable;
+  }>(async (c, next) => {
     const token = await getSessionCookie(c);
     if (!token) {
       return c.json({ error: "Not authorized." }, 403);
