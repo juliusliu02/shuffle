@@ -1,9 +1,13 @@
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
+import { userTable } from "@/server/db/schema/auth";
 
 // stores articles
 export const articlesTable = sqliteTable("articles_table", {
   id: int().primaryKey({ autoIncrement: true }),
+  userId: int()
+    .references(() => userTable.id, { onDelete: "cascade" })
+    .notNull(),
   title: text().notNull(),
   body: text().notNull(),
   source: text(),
@@ -21,8 +25,7 @@ export const notesTable = sqliteTable("notes_table", {
   note: text(),
 });
 
-/* Models a Range to support [Highlight API]{@link https://developer.mozilla.org/en-US/docs/Web/API/CSS_Custom_Highlight_API}.
- */
+// stores offsets relative to the full text
 export const highlightsTable = sqliteTable("highlights_table", {
   id: int().primaryKey({ autoIncrement: true }),
   noteId: int()

@@ -3,6 +3,7 @@ import { createArticleSchema } from "@/lib/schemas/articles";
 import { zValidator } from "@hono/zod-validator";
 import * as articleService from "@/server/services/articles";
 import { requireAuth } from "@/server/middlewares/auth";
+import { ArticleInsert } from "@/lib/types";
 
 const ArticleApp = new Hono()
   .use(requireAuth())
@@ -12,7 +13,11 @@ const ArticleApp = new Hono()
   })
   .post("/", zValidator("json", createArticleSchema), async (c) => {
     const validatedFields = c.req.valid("json");
-    const { id } = (await articleService.createArticle(validatedFields))[0];
+    const articleData: ArticleInsert = {
+      ...validatedFields,
+      userId: c.get("user").id,
+    };
+    const { id } = (await articleService.createArticle(articleData))[0];
     return c.json({ id }, 201);
   })
   .get("/:id", async (c) => {
