@@ -5,4 +5,4 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
-export const honoClient = hc<AppType>(`${baseUrl}`);
+export const honoClient = hc<AppType>(`${baseUrl}/api`);

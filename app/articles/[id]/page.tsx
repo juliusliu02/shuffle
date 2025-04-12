@@ -13,7 +13,7 @@ import { honoClient } from "@/lib/rpc/hono-client";
 import { ArticleWithNotesAndHighlights } from "@/lib/types";
 import { toast } from "sonner";
 
-const $get = honoClient.api.articles[":id"].$get;
+const $get = honoClient.articles[":id"].$get;
 
 const fetcher = (arg: InferRequestType<typeof $get>) => async () => {
   const res = await $get(arg);
@@ -78,7 +78,7 @@ const Page = () => {
     }
 
     try {
-      const response = await honoClient.api.notes.$post({
+      const response = await honoClient.notes.$post({
         json: { ...note, articleId: Number(id) },
       });
 

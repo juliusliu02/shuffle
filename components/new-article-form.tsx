@@ -22,7 +22,7 @@ import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const $post = honoClient.api.articles.$post;
+const $post = honoClient.articles.$post;
 type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
 
 const createArticle = async (

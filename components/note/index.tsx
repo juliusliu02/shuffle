@@ -15,8 +15,8 @@ type NotesProps = {
   notes: NoteType[];
 };
 
-const $put = honoClient.api.notes[":id"].$put;
-const $delete = honoClient.api.notes[":id"].$delete;
+const $put = honoClient.notes[":id"].$put;
+const $delete = honoClient.notes[":id"].$delete;
 
 const fetcher = async (
   _url: string,
@@ -57,7 +57,7 @@ const Note = ({ note }: { note: NoteType }) => {
               false, // don’t revalidate; we already have the right data
             );
           },
-          onError: (error) => {
+          onError: (error: unknown) => {
             if (error instanceof Error) {
               toast.error(error.message);
               return;

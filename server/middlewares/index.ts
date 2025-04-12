@@ -1,11 +1,11 @@
-import type { Hono } from "hono";
+import type { Hono, Schema } from "hono";
 import { csrf } from "hono/csrf";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { prettyJSON } from "hono/pretty-json";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import type { Context } from "hono";
-import type { HTTPResponseError } from "hono/types";
+import type { BlankEnv, BlankSchema, HTTPResponseError } from "hono/types";
 
 function systemException() {
   return (err: Error | HTTPResponseError, c: Context) => {
@@ -14,7 +14,13 @@ function systemException() {
   };
 }
 
-export const initGlobalMiddleware = (app: Hono) => {
+export const initGlobalMiddleware = <
+  E extends BlankEnv,
+  S extends Schema = BlankSchema,
+  BasePath extends string = "/",
+>(
+  app: Hono<E, S, BasePath>,
+) => {
   if (process.env.NODE_ENV === "production") {
     app.use(csrf());
   }
