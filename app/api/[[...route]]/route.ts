@@ -9,7 +9,7 @@ import { initGlobalMiddleware } from "@/server/middlewares";
 // edge runtime doesn't support file link
 // export const runtime = "edge";
 
-const app = initGlobalMiddleware(new Hono());
+const app = initGlobalMiddleware(new Hono().basePath("/api"));
 
 app.use(requireAuth());
 
