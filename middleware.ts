@@ -21,7 +21,7 @@ export default async function middleware(req: NextRequest) {
   }
 
   // 5. Redirect to main page if the user is authenticated
-  if (isPublicRoute && cookie && !req.nextUrl.pathname.startsWith("/")) {
+  if (isPublicRoute && cookie && req.nextUrl.pathname !== "/") {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 

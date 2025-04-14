@@ -8,7 +8,7 @@ import { ArticleInsert } from "@/lib/types";
 const ArticleApp = new Hono()
   .use(requireAuth())
   .get("/", async (c) => {
-    const articles = await articleService.getArticles();
+    const articles = await articleService.getArticles(c.get("user").id);
     return c.json(articles, 200);
   })
   .post("/", zValidator("json", createArticleSchema), async (c) => {
@@ -27,7 +27,10 @@ const ArticleApp = new Hono()
       return c.json({ error: "Invalid article id" }, 400);
     }
 
-    const article = await articleService.getArticle(articleId);
+    const article = await articleService.getArticle(
+      articleId,
+      c.get("user").id,
+    );
     if (!article) {
       return c.json({ error: "Article not found" }, 404);
     }
@@ -40,7 +43,7 @@ const ArticleApp = new Hono()
       return c.json({ error: "Invalid article id" }, 400);
     }
 
-    await articleService.deleteArticle(articleId);
+    await articleService.deleteArticle(articleId, c.get("user").id);
     return c.body(null, 204);
   });
 

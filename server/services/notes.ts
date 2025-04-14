@@ -1,18 +1,39 @@
 import { db } from "../db";
-import { highlightsTable, notesTable } from "@/server/db/schema/articles";
+import {
+  articlesTable,
+  authorizedNotesView,
+  highlightsTable,
+  notesTable,
+} from "@/server/db/schema/articles";
 import {
   HighlightInsert,
   NoteInsertWithHighlights,
   NoteWithHighlights,
   Highlight,
+  Note,
 } from "@/lib/types";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { updateNoteSchema } from "@/lib/schemas/notes";
 import { z } from "zod";
+import { NotFoundError } from "@/server/utils/error";
 
 export const createNote = async (
+  userId: number,
   data: NoteInsertWithHighlights,
 ): Promise<NoteWithHighlights> => {
+  const article = await db
+    .select()
+    .from(articlesTable)
+    .where(
+      and(
+        eq(articlesTable.userId, userId),
+        eq(articlesTable.id, data.articleId),
+      ),
+    );
+  if (article.length === 0) {
+    throw new NotFoundError("Article not found");
+  }
+
   const { highlights, ...noteData } = data;
 
   const note = (
@@ -37,18 +58,34 @@ export const createNote = async (
 
 export const updateNote = async (
   id: number,
+  userId: number,
   data: z.infer<typeof updateNoteSchema>,
-) => {
+): Promise<Note[]> => {
   return db
     .update(notesTable)
     .set(data)
-    .where(eq(notesTable.id, id))
+    .from(authorizedNotesView)
+    .where(and(eq(notesTable.id, id), eq(authorizedNotesView.userId, userId)))
     .returning();
 };
 
-export const deleteNote = async (id: number) => {
-  return db
-    .delete(notesTable)
-    .where(eq(notesTable.id, id))
-    .returning({ id: notesTable.id });
+export const deleteNote = async (
+  id: number,
+  userId: number,
+): Promise<Note[]> => {
+  const note = await db
+    .select()
+    .from(authorizedNotesView)
+    .where(
+      and(
+        eq(authorizedNotesView.id, id),
+        eq(authorizedNotesView.userId, userId),
+      ),
+    );
+
+  if (!note) {
+    return [];
+  }
+
+  return db.delete(notesTable).where(eq(notesTable.id, id)).returning();
 };

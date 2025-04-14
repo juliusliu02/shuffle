@@ -1,7 +1,7 @@
 import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/types";
 import { db } from "../db";
 import { articlesTable } from "@/server/db/schema/articles";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export const createArticle = async (data: ArticleInsert) => {
   return db
@@ -12,9 +12,10 @@ export const createArticle = async (data: ArticleInsert) => {
 
 export const getArticle = async (
   id: number,
+  userId: number,
 ): Promise<ArticleWithNotesAndHighlights | undefined> => {
   return db.query.articlesTable.findFirst({
-    where: eq(articlesTable.id, id),
+    where: and(eq(articlesTable.id, id), eq(articlesTable.userId, userId)),
     with: {
       notes: {
         with: {
@@ -25,12 +26,15 @@ export const getArticle = async (
   });
 };
 
-export const getArticles = async () => {
+export const getArticles = async (userId: number) => {
   return db
     .select({ id: articlesTable.id, title: articlesTable.title })
-    .from(articlesTable);
+    .from(articlesTable)
+    .where(eq(articlesTable.userId, userId));
 };
 
-export const deleteArticle = async (id: number) => {
-  return db.delete(articlesTable).where(eq(articlesTable.id, id));
+export const deleteArticle = async (id: number, userId: number) => {
+  return db
+    .delete(articlesTable)
+    .where(and(eq(articlesTable.id, id), eq(articlesTable.userId, userId)));
 };

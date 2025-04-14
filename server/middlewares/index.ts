@@ -6,11 +6,15 @@ import { prettyJSON } from "hono/pretty-json";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import type { Context } from "hono";
 import type { BlankEnv, BlankSchema, HTTPResponseError } from "hono/types";
+import { NotFoundError } from "@/server/utils/error";
 
 function systemException() {
   return (err: Error | HTTPResponseError, c: Context) => {
     console.error(err);
-    return c.json({ message: "Internal Server Error", error: err }, 500);
+    if (err instanceof NotFoundError) {
+      return c.json({ message: err.message }, 404);
+    }
+    return c.json({ message: err.message }, 500);
   };
 }
 
