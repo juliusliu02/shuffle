@@ -1,12 +1,12 @@
 import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
 import { eq, relations } from "drizzle-orm";
-import { userTable } from "@/server/db/schema/auth";
+import { usersTable } from "@/server/db/schema/auth";
 
 // stores articles
 export const articlesTable = sqliteTable("articles_table", {
   id: int().primaryKey({ autoIncrement: true }),
-  userId: int()
-    .references(() => userTable.id, { onDelete: "cascade" })
+  userId: int("user_id")
+    .references(() => usersTable.id, { onDelete: "cascade" })
     .notNull(),
   title: text().notNull(),
   body: text().notNull(),
@@ -17,7 +17,7 @@ export const articlesTable = sqliteTable("articles_table", {
 export const notesTable = sqliteTable("notes_table", {
   id: int().primaryKey({ autoIncrement: true }),
   entry: text().notNull(),
-  articleId: int()
+  articleId: int("article_id")
     .references(() => articlesTable.id)
     .notNull(),
   type: text(),

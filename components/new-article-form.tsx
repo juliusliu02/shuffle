@@ -16,13 +16,13 @@ import { useForm } from "react-hook-form";
 import { createArticleSchema } from "@/lib/schemas/articles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import { honoClient } from "@/lib/rpc/hono-client";
+import { appClient } from "@/lib/rpc/app-cli";
 import { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-const $post = honoClient.articles.$post;
+const $post = appClient.articles.$post;
 type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
 
 const createArticle = async (

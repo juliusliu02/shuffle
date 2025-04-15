@@ -12,9 +12,9 @@ function systemException() {
   return (err: Error | HTTPResponseError, c: Context) => {
     console.error(err);
     if (err instanceof NotFoundError) {
-      return c.json({ message: err.message }, 404);
+      return c.json({ error: err.message }, 404);
     }
-    return c.json({ message: err.message }, 500);
+    return c.json({ error: err.message }, 500);
   };
 }
 

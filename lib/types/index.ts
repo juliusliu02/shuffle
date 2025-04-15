@@ -31,10 +31,10 @@ export type HighlightInsert = Omit<
 >;
 
 export type User = Omit<
-  typeof authSchema.userTable.$inferSelect,
+  typeof authSchema.usersTable.$inferSelect,
   "hashedPassword"
 >;
-export type Session = typeof authSchema.sessionTable.$inferSelect;
+export type Session = typeof authSchema.sessionsTable.$inferSelect;
 
 type Schema = typeof articleSchema;
 type TSchema = ExtractTablesWithRelations<Schema>;

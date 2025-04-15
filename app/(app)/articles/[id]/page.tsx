@@ -9,11 +9,11 @@ import { mutate as globalMutate } from "swr";
 import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
 import Notes from "@/components/note";
-import { honoClient } from "@/lib/rpc/hono-client";
+import { appClient } from "@/lib/rpc/app-cli";
 import { ArticleWithNotesAndHighlights } from "@/lib/types";
 import { toast } from "sonner";
 
-const $get = honoClient.articles[":id"].$get;
+const $get = appClient.articles[":id"].$get;
 
 const fetcher = (arg: InferRequestType<typeof $get>) => async () => {
   const res = await $get(arg);
@@ -75,14 +75,18 @@ const Page = () => {
 
     if (selectedRanges.length === 0) {
       toast.warning("You haven't selected words to highlight.");
+      return;
     }
 
     try {
-      const response = await honoClient.notes.$post({
+      const response = await appClient.notes.$post({
         json: { ...note, articleId: Number(id) },
       });
 
-      if (!response.ok) return;
+      if (!response.ok) {
+        toast.error("An error occurred. Please try again later.");
+        return;
+      }
       const data = await response.json();
       await globalMutate(
         `/api/articles/${id}`,
@@ -96,9 +100,10 @@ const Page = () => {
         false, // don’t revalidate; we already have the right data
       );
       toast.success("Note created successfully.");
-    } catch (error) {
+    } catch (e) {
+      console.log(e);
       let errorMsg = "Failed to add note.";
-      if (error instanceof Error) {
+      if (e instanceof Error) {
         errorMsg = error.message;
       }
       toast.error(errorMsg);

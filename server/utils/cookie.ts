@@ -1,10 +1,12 @@
 import { Context } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 
+export const SESSION_COOKIE_NAME = "auth_session";
+
 export const getSessionCookie = async (
   c: Context,
 ): Promise<string | undefined> => {
-  return getCookie(c, "auth_session");
+  return getCookie(c, SESSION_COOKIE_NAME);
 };
 
 export const setSessionCookie = (
@@ -12,7 +14,7 @@ export const setSessionCookie = (
   token: string,
   expiresAt: Date,
 ): void => {
-  setCookie(c, "auth_session", token, {
+  setCookie(c, SESSION_COOKIE_NAME, token, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
@@ -22,5 +24,5 @@ export const setSessionCookie = (
 };
 
 export const deleteSessionCookie = (c: Context): void => {
-  deleteCookie(c, "auth_session");
+  deleteCookie(c, SESSION_COOKIE_NAME);
 };

@@ -4,7 +4,7 @@ import {
   NoteWithHighlights as NoteType,
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { honoClient } from "@/lib/rpc/hono-client";
+import { appClient } from "@/lib/rpc/app-cli";
 import { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { mutate as globalMutate } from "swr";
@@ -15,8 +15,8 @@ type NotesProps = {
   notes: NoteType[];
 };
 
-const $put = honoClient.notes[":id"].$put;
-const $delete = honoClient.notes[":id"].$delete;
+const $put = appClient.notes[":id"].$put;
+const $delete = appClient.notes[":id"].$delete;
 
 const fetcher = async (
   _url: string,

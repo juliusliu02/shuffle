@@ -1,5 +1,5 @@
 import { createMiddleware } from "hono/factory";
-import { getSessionCookie } from "@/server/utils/cookie";
+import { deleteSessionCookie, getSessionCookie } from "@/server/utils/cookie";
 import { validateSessionToken } from "@/server/services/auth";
 import { User } from "@/lib/types";
 
@@ -18,6 +18,7 @@ export const requireAuth = () => {
 
     const { user } = await validateSessionToken(token);
     if (!user) {
+      deleteSessionCookie(c);
       return c.json({ error: "Not authorized." }, 403);
     }
     c.set("user", user);
