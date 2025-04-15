@@ -1,3 +1,4 @@
+"use client";
 import React, { FormEvent, useCallback } from "react";
 import {
   ArticleWithNotesAndHighlights,
@@ -115,21 +116,33 @@ const Note = ({ note }: { note: NoteType }) => {
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
+          onKeyDown={(e) => {
+            // For example: submit on Cmd+Enter (Mac) or Ctrl+Enter (Win)
+            if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+              e.preventDefault();
+              e.currentTarget.form?.requestSubmit();
+            }
+          }}
         />
         <div className="flex justify-between">
           <Button
             onClick={handleDelete}
+            type={"button"}
             className="bg-amber-800 hover:bg-amber-900"
           >
             <Trash2 />
           </Button>
           <div className="self-end flex gap-2">
-            <Button variant={"outline"} onClick={() => setEdit(false)}>
+            <Button
+              type={"button"}
+              variant={"outline"}
+              onClick={() => setEdit(false)}
+            >
               Cancel
             </Button>
             <Button
               className={"bg-amber-300 hover:bg-amber-400 text-slate-800"}
-              type={"submit"}
+              type="submit"
               disabled={isMutating}
             >
               Save
