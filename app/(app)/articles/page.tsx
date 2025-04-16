@@ -4,7 +4,7 @@ import { appClient } from "@/lib/rpc/app-cli";
 import { notFound } from "next/navigation";
 import { PageTitle } from "@/components/typography";
 import ArticleList from "@/components/article/article-list";
-import { ArticleListItem } from "@/lib/types";
+import { type ArticleListItem } from "@/lib/types";
 import { LoadingSpinner } from "@/components/loading";
 
 const Page = () => {

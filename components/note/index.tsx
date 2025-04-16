@@ -1,12 +1,12 @@
 "use client";
-import React, { FormEvent, useCallback } from "react";
+import React, { type FormEvent, useCallback } from "react";
 import {
-  ArticleWithNotesAndHighlights,
-  NoteWithHighlights as NoteType,
+  type ArticleWithNotesAndHighlights,
+  type NoteWithHighlights as NoteType,
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { appClient } from "@/lib/rpc/app-cli";
-import { InferRequestType } from "hono";
+import { type InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { mutate as globalMutate } from "swr";
 import { PencilLine, Trash2 } from "lucide-react";

@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import { Article } from "@/components/article";
 import { Button } from "@/components/ui/button";
 import { notFound, useParams } from "next/navigation";
-import { InferRequestType } from "hono";
+import { type InferRequestType } from "hono";
 import useSWR from "swr";
 import { mutate as globalMutate } from "swr";
 import { LoadingSpinner } from "@/components/loading";
 import { useTextRange } from "@/hooks/use-text-range";
 import Notes from "@/components/note";
 import { appClient } from "@/lib/rpc/app-cli";
-import { ArticleWithNotesAndHighlights } from "@/lib/types";
+import { type ArticleWithNotesAndHighlights } from "@/lib/types";
 import { toast } from "sonner";
 
 const $get = appClient.articles[":id"].$get;

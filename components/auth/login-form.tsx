@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
-import { z } from "zod";
+import { type z } from "zod";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";

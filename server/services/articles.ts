@@ -1,4 +1,7 @@
-import { ArticleInsert, ArticleWithNotesAndHighlights } from "@/lib/types";
+import {
+  type ArticleInsert,
+  type ArticleWithNotesAndHighlights,
+} from "@/lib/types";
 import { db } from "../db";
 import { articlesTable } from "@/server/db/schema/articles";
 import { and, eq } from "drizzle-orm";

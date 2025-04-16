@@ -5,7 +5,7 @@ import {
   highlightsTable,
   notesTable,
 } from "@/server/db/schema/articles";
-import {
+import type {
   HighlightInsert,
   NoteInsertWithHighlights,
   NoteWithHighlights,
@@ -13,8 +13,8 @@ import {
   Note,
 } from "@/lib/types";
 import { and, eq } from "drizzle-orm";
-import { updateNoteSchema } from "@/lib/schemas/notes";
-import { z } from "zod";
+import { type updateNoteSchema } from "@/lib/schemas/notes";
+import { type z } from "zod";
 import { NotFoundError } from "@/server/utils/error";
 
 export const createNote = async (

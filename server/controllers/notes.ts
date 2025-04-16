@@ -6,7 +6,7 @@ import {
   updateNoteSchema,
 } from "@/lib/schemas/notes";
 import * as noteService from "@/server/services/notes";
-import { NoteInsertWithHighlights } from "@/lib/types";
+import { type NoteInsertWithHighlights } from "@/lib/types";
 import { requireAuth } from "@/server/middlewares/auth";
 
 const NoteApp = new Hono()

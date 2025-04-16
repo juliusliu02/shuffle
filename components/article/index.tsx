@@ -1,9 +1,9 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import {
-  ArticleWithNotesAndHighlights,
-  Highlight,
-  NoteWithHighlights,
+  type ArticleWithNotesAndHighlights,
+  type Highlight,
+  type NoteWithHighlights,
 } from "@/lib/types";
 import { Mark } from "@/components/typography";
 

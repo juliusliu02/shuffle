@@ -1,7 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import { deleteSessionCookie, getSessionCookie } from "@/server/utils/cookie";
 import { validateSessionToken } from "@/server/services/auth";
-import { User } from "@/lib/types";
+import { type User } from "@/lib/types";
 
 type AuthVariable = {
   user: User;
