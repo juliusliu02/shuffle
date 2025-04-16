@@ -1,6 +1,10 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { ArticleWithNotesAndHighlights, Highlight } from "@/lib/types";
+import {
+  ArticleWithNotesAndHighlights,
+  Highlight,
+  NoteWithHighlights,
+} from "@/lib/types";
 import { Mark } from "@/components/typography";
 
 type WithClass = {
@@ -47,8 +51,8 @@ const getLocalHighlights = (
       continue;
     }
     // trim at the edges
-    const localStart = Math.max(0, global.startOffset - startIndex);
-    const localEnd = Math.min(endIndex, global.endOffset) - startIndex;
+    const localStart: number = Math.max(0, global.startOffset - startIndex);
+    const localEnd: number = Math.min(endIndex, global.endOffset) - startIndex;
     // doesn't handle backward selection yet
     if (localStart < localEnd) {
       localHighlights.push({
@@ -71,12 +75,14 @@ const getHighlightedText = (
   }
 
   // Sort by start offset to process sequentially
-  const sorted = [...highlights].sort((a, b) => a.startOffset - b.startOffset);
+  const sorted: Highlight[] = [...highlights].sort(
+    (a: Highlight, b: Highlight) => a.startOffset - b.startOffset,
+  );
 
   const result: React.ReactNode[] = [];
-  let cursor = 0;
+  let cursor: number = 0;
 
-  sorted.forEach((hl, index) => {
+  sorted.forEach((hl: Highlight, index: number) => {
     const { startOffset, endOffset, noteId, id } = hl;
 
     // Push any non-highlighted text before this highlight
@@ -111,7 +117,7 @@ const Paragraph = ({ text, highlights }: ParagraphProps) => {
   return (
     <p>
       {segments.map((segment, i) => {
-        const localHighlights = getLocalHighlights(
+        const localHighlights: Highlight[] = getLocalHighlights(
           runningIndex,
           runningIndex + segment.segment.length,
           highlights,
@@ -128,10 +134,12 @@ const Paragraph = ({ text, highlights }: ParagraphProps) => {
 };
 
 export const Article = ({ article, ref }: ArticleProps) => {
-  const notes = article.notes;
-  const highlights = notes.flatMap((note) => note.highlights);
+  const notes: NoteWithHighlights[] = article.notes;
+  const highlights: Highlight[] = notes.flatMap(
+    (note: NoteWithHighlights): Highlight[] => note.highlights,
+  );
 
-  let runningIndex = 0;
+  let runningIndex: number = 0;
 
   return (
     <article className="space-y-6">
@@ -142,8 +150,8 @@ export const Article = ({ article, ref }: ArticleProps) => {
         )}
       </header>
       <div ref={ref} className="font-serif text-xl/[300%] space-y-5">
-        {article.body.split("\n").map((paragraph, index) => {
-          const localHighlights = getLocalHighlights(
+        {article.body.split("\n").map((paragraph: string, index: number) => {
+          const localHighlights: Highlight[] = getLocalHighlights(
             runningIndex,
             runningIndex + paragraph.length,
             highlights,

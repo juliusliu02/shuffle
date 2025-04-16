@@ -46,12 +46,15 @@ const Note = ({ note }: { note: NoteType }) => {
           onSuccess: () => {
             globalMutate(
               `/api/articles/${note.articleId}`,
-              (old: ArticleWithNotesAndHighlights | undefined) => {
+              (
+                old: ArticleWithNotesAndHighlights | undefined,
+              ): ArticleWithNotesAndHighlights | undefined => {
                 if (!old) return old; // first load hasn’t finished yet
                 return {
                   ...old,
-                  notes: old.notes.map((n) =>
-                    n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
+                  notes: old.notes.map(
+                    (n: NoteType): NoteType =>
+                      n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
                   ),
                 };
               },
@@ -81,11 +84,13 @@ const Note = ({ note }: { note: NoteType }) => {
     if (response.ok) {
       await globalMutate(
         `/api/articles/${note.articleId}`,
-        (old: ArticleWithNotesAndHighlights | undefined) => {
+        (
+          old: ArticleWithNotesAndHighlights | undefined,
+        ): ArticleWithNotesAndHighlights | undefined => {
           if (!old) return old;
           return {
             ...old,
-            notes: old.notes.filter((n) => n.id !== note.id),
+            notes: old.notes.filter((n: NoteType) => n.id !== note.id),
           };
         },
       );
@@ -128,7 +133,7 @@ const Note = ({ note }: { note: NoteType }) => {
           <Button
             onClick={handleDelete}
             type={"button"}
-            className="bg-amber-800 hover:bg-amber-900"
+            className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-800 text-foreground"
           >
             <Trash2 />
           </Button>
