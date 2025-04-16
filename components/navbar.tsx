@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <div className="flex justify-between px-12 py-4 bg-white dark:bg-black">
+    <div className="flex justify-between px-8 py-4 bg-white dark:bg-black">
       <Link href="/" className="text-2xl font-semibold">
         Shuffle
       </Link>

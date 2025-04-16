@@ -41,7 +41,7 @@ const Page = () => {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-32">
+    <div className="max-w-xl mx-auto mt-32 px-8">
       <PageTitle>My articles</PageTitle>
       {articles.length > 0 ? (
         <ArticleList articles={articles} />
