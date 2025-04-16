@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { ArticleWithNotesAndHighlights, Highlight } from "@/lib/types";
+import { Mark } from "@/components/typography";
 
 type WithClass = {
   className?: string;
@@ -85,9 +86,9 @@ const getHighlightedText = (
 
     // Push the highlighted text
     result.push(
-      <mark key={index} data-note-id={noteId} data-highlight-id={id}>
+      <Mark key={index} data-note-id={noteId} data-highlight-id={id}>
         {text.slice(startOffset, endOffset)}
-      </mark>,
+      </Mark>,
     );
 
     // Advance the cursor

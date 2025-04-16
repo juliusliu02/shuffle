@@ -9,7 +9,7 @@ import { LoadingSpinner } from "@/components/loading";
 
 const Page = () => {
   const [articles, setArticles] = React.useState<ArticleListItem[] | undefined>(
-    [],
+    undefined,
   );
 
   React.useEffect(() => {

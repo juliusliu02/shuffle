@@ -100,19 +100,19 @@ const Note = ({ note }: { note: NoteType }) => {
         onSubmit={handleSubmit}
       >
         <input
-          className="text-xl font-semibold -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
+          className="text-xl font-semibold -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           placeholder="Entry"
           name="entry"
           defaultValue={note.entry}
         />
         <input
-          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 transition"
+          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="type"
           defaultValue={note.type ? note.type : undefined}
           placeholder={"Category"}
         />
         <textarea
-          className="my-4 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 transition"
+          className="my-4 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
@@ -155,7 +155,7 @@ const Note = ({ note }: { note: NoteType }) => {
 
   return (
     <div
-      className="hover:bg-stone-100 p-4 sm:rounded-xl transition hover:not-focus:cursor-pointer group"
+      className="hover:bg-stone-100 dark:hover:bg-stone-700 p-4 sm:rounded-xl transition hover:not-focus:cursor-pointer group"
       onClick={() => setEdit(true)}
     >
       <div className="flex justify-between items-center">
