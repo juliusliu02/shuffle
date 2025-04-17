@@ -133,7 +133,7 @@ const Note = ({ note }: { note: NoteType }) => {
           <Button
             onClick={handleDelete}
             type={"button"}
-            className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-800 text-foreground"
+            className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-800 text-amber-50"
           >
             <Trash2 />
           </Button>
