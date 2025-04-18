@@ -129,7 +129,7 @@ const Page = () => {
           Add notes
         </Button>
       </div>
-      <aside className="relative w-full max-w-lg md:absolute md:w-[max(18rem,15vw)] md:right-12">
+      <aside className="relative w-full max-w-lg md:fixed md:top-28 md:h-[calc(100vh-12rem)] md:scrollbar-hidden md:overflow-y-scroll md:w-[max(18rem,15vw)] md:right-12">
         <Notes notes={data.notes} />
       </aside>
     </main>
