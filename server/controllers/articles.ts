@@ -17,8 +17,8 @@ const ArticleApp = new Hono()
       ...validatedFields,
       userId: c.get("user").id,
     };
-    const { id } = (await articleService.createArticle(articleData))[0];
-    return c.json({ id }, 201);
+    const data = (await articleService.createArticle(articleData))[0];
+    return c.json({ ...data }, 201);
   })
   .get("/:id", async (c) => {
     const { id } = c.req.param();

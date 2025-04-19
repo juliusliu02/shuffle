@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -21,6 +20,7 @@ import { type InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import type { ArticleListItem } from "@/lib/types";
 
 const $post = appClient.articles.$post;
 type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
@@ -28,9 +28,9 @@ type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
 const createArticle = async (
   _key: string,
   { arg }: { arg: InferRequestType<typeof $post> },
-) => {
+): Promise<ArticleListItem> => {
   const response = await $post(arg);
-  return await response.json();
+  return response.json();
 };
 
 const NewArticleForm = () => {
@@ -44,8 +44,14 @@ const NewArticleForm = () => {
   });
 
   const { trigger, isMutating } = useSWRMutation(
-    "createArticle",
+    "/api/articles",
     createArticle,
+    {
+      populateCache: (data, current: ArticleListItem[] = []) => [
+        data,
+        ...current,
+      ],
+    },
   );
   const router = useRouter();
 

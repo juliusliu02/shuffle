@@ -1,16 +1,20 @@
 import {
   type ArticleInsert,
+  type ArticleListItem,
   type ArticleWithNotesAndHighlights,
 } from "@/lib/types";
 import { db } from "../db";
 import { articlesTable } from "@/server/db/schema/articles";
 import { and, eq } from "drizzle-orm";
 
-export const createArticle = async (data: ArticleInsert) => {
-  return db
-    .insert(articlesTable)
-    .values(data)
-    .returning({ id: articlesTable.id });
+export const createArticle = async (
+  data: ArticleInsert,
+): Promise<ArticleListItem[]> => {
+  return db.insert(articlesTable).values(data).returning({
+    id: articlesTable.id,
+    title: articlesTable.title,
+    createdAt: articlesTable.createdAt,
+  });
 };
 
 export const getArticle = async (
@@ -18,7 +22,11 @@ export const getArticle = async (
   userId: number,
 ): Promise<ArticleWithNotesAndHighlights | undefined> => {
   return db.query.articlesTable.findFirst({
-    where: and(eq(articlesTable.id, id), eq(articlesTable.userId, userId)),
+    where: and(
+      eq(articlesTable.id, id),
+      eq(articlesTable.userId, userId),
+      eq(articlesTable.isArchived, false),
+    ),
     with: {
       notes: {
         with: {

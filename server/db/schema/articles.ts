@@ -14,6 +14,7 @@ export const articlesTable = sqliteTable("articles_table", {
   createdAt: text("timestamp")
     .notNull()
     .default(sql`(current_timestamp)`),
+  isArchived: int("is_archived", { mode: "boolean" }).default(false).notNull(),
 });
 
 // stores notes of words (one note to many highlights)

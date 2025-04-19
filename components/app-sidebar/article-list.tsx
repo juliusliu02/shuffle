@@ -7,17 +7,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { Ellipsis } from "lucide-react";
 import type { ArticleListItem } from "@/lib/types";
 import { groupArticlesByDate } from "@/lib/utils";
+import ItemAction from "@/components/app-sidebar/item-action";
 
 type ArticleListProps = {
   articles: ArticleListItem[];
   active: number | undefined;
-  setActive: (active: number | undefined) => void;
 };
 
-const ArticleList = ({ articles, active, setActive }: ArticleListProps) => {
+const ArticleList = ({ articles, active }: ArticleListProps) => {
   const groupedArticles = groupArticlesByDate(articles);
   return (
     <>
@@ -34,20 +33,17 @@ const ArticleList = ({ articles, active, setActive }: ArticleListProps) => {
                     <SidebarMenuItem key={article.id}>
                       <SidebarMenuButton
                         asChild
-                        onClick={() => {
-                          setActive(article.id);
-                        }}
                         isActive={active === article.id}
                       >
-                        <div className="cursor-pointer group/item">
-                          <Link
-                            href={`/articles/${article.id}`}
-                            className="truncate text-clip"
-                          >
+                        <Link
+                          className="cursor-pointer group/item"
+                          href={`/articles/${article.id}`}
+                        >
+                          <span className="truncate text-clip">
                             {article.title}
-                          </Link>
-                          <Ellipsis className="ml-auto opacity-0 group-hover/item:opacity-100" />
-                        </div>
+                          </span>
+                          <ItemAction id={article.id} />
+                        </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
