@@ -1,20 +1,11 @@
 "use client";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarGroup } from "@/components/ui/sidebar";
 import React, { useEffect, useState } from "react";
 import type { ArticleListItem } from "@/lib/types";
 import { appClient } from "@/lib/rpc/app-cli";
 import { notFound } from "next/navigation";
 import { LoadingSpinner } from "@/components/loading";
-import Link from "next/link";
+import ArticleList from "@/components/app-sidebar/article-list";
 
 const getArticleIdOnPage = () => {
   if (typeof window === "undefined") {
@@ -71,29 +62,11 @@ const AppSidebar = () => {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Articles</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {articles.map((article) => (
-                <SidebarMenuItem key={article.id}>
-                  <SidebarMenuButton
-                    asChild
-                    onClick={() => {
-                      setActive(article.id);
-                    }}
-                    isActive={active === article.id}
-                  >
-                    <Link
-                      href={`/articles/${article.id}`}
-                      className="truncate inline-block"
-                    >
-                      {article.title}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+          <ArticleList
+            articles={articles}
+            active={active}
+            setActive={setActive}
+          />
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

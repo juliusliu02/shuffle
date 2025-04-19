@@ -122,18 +122,18 @@ const Note = ({ note }: { note: NoteType }) => {
           defaultValue={note.entry}
         />
         <input
-          className="text-sm text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
+          className="text-sm text-muted-foreground -mx-2 px-2 py-1 mt-0.5 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="type"
           defaultValue={note.type ? note.type : undefined}
           placeholder={"Category"}
         />
         <textarea
-          className="my-2 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
+          className="mt-1 mb-2 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
           onKeyDown={(e) => {
-            // For example: submit on Cmd+Enter (Mac) or Ctrl+Enter (Win)
+            // For save with ctrl + enter
             if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
               e.preventDefault();
               e.currentTarget.form?.requestSubmit();
@@ -199,12 +199,10 @@ const Note = ({ note }: { note: NoteType }) => {
         <dt className="text-lg text-wrap font-medium">{note.entry}</dt>
         <PencilLine className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity" />
       </div>
-      <div className="pl-3 border-l-2 has-[*]:mt-2">
-        {note.type && (
-          <div className="text-muted-foreground text-sm my-3">{note.type}</div>
-        )}
-        {note.note && <dd className="mt-3">{note.note}</dd>}
-      </div>
+      {note.type && (
+        <div className="text-muted-foreground text-sm mt-0.5">{note.type}</div>
+      )}
+      {note.note && <dd className="mt-2">{note.note}</dd>}
     </div>
   );
 };
@@ -217,7 +215,7 @@ const Notes = ({ notes }: NotesProps) => {
   return (
     <>
       <header className="mb-4">
-        <h2 className="font-bold text-xl">My notes</h2>
+        <h2 className="font-semibold text-xl">My notes</h2>
       </header>
       <dl className="space-y-1 -mx-4">
         {notes.map((note) => (
