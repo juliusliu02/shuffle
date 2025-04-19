@@ -111,28 +111,26 @@ const Page = () => {
   };
 
   return (
-    <main className="flex flex-col gap-12 items-center px-4 relative mt-32">
+    <div className="lg:flex">
       <div
-        className="max-w-lg
-        md:mr-96 md:ml-[clamp(3rem,20vw-8rem,24rem)]"
-        /* 24rem to leave room for the sidebar width plus space around it.
-         * left margin grow from 3rem to 24rem while right margin remains as 24rem.
-         * -8rem acts as an offset to let left margin start out lower.
-         * This ensures smooth and continuous change of left margin over the breakpoints.
-         * */
+        className="mt-12 break-words
+                      lg:max-w-2xl lg:w-2/3 px-8 lg:mx-auto lg:pr-12 mb-12"
       >
         <Article article={data} ref={containerRef} />
-        <Button
-          className="fixed bottom-4 right-4 z-10 bg-amber-300 hover:bg-amber-400 text-slate-800"
-          onClick={handleClick}
-        >
-          Add notes
-        </Button>
       </div>
-      <aside className="relative w-full max-w-lg md:fixed md:top-28 md:h-[calc(100vh-12rem)] md:scrollbar-hidden md:overflow-y-scroll md:w-[max(18rem,15vw)] md:right-12">
+      <Button
+        className="fixed bottom-4 right-4 z-10 bg-amber-300 hover:bg-amber-400 text-slate-800"
+        onClick={handleClick}
+      >
+        Add notes
+      </Button>
+      <aside
+        className="px-8 relative w-full
+        lg:shrink-0 lg:pt-[3.75rem] lg:scrollbar-hidden lg:overflow-y-scroll lg:w-80 lg:right-8"
+      >
         <Notes notes={data.notes} />
       </aside>
-    </main>
+    </div>
   );
 };
 

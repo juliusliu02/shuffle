@@ -26,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${ebGaramond.variable} font-sans antialiased bg-muted`}
+        className={`${inter.variable} ${ebGaramond.variable} font-sans antialiased`}
       >
         {children}
         <Toaster richColors position="top-right" />

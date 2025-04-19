@@ -12,7 +12,7 @@ export type ArticleInsert = Omit<
   typeof articleSchema.articlesTable.$inferInsert,
   "id"
 >;
-export type ArticleListItem = Pick<Article, "id" | "title">;
+export type ArticleListItem = Pick<Article, "id" | "title" | "createdAt">;
 
 export type Note = typeof articleSchema.notesTable.$inferSelect;
 export type NoteInsert = Omit<

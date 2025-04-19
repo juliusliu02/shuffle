@@ -1,5 +1,5 @@
 import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
-import { eq, relations } from "drizzle-orm";
+import { eq, relations, sql } from "drizzle-orm";
 import { usersTable } from "@/server/db/schema/auth";
 
 // stores articles
@@ -11,6 +11,9 @@ export const articlesTable = sqliteTable("articles_table", {
   title: text().notNull(),
   body: text().notNull(),
   source: text(),
+  createdAt: text("timestamp")
+    .notNull()
+    .default(sql`(current_timestamp)`),
 });
 
 // stores notes of words (one note to many highlights)

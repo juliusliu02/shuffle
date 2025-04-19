@@ -10,6 +10,16 @@ import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 import { ChevronDownIcon } from "lucide-react";
 import type { User } from "@/lib/types";
 import { authClient } from "@/lib/rpc/auth-cli";
+import { LogOut } from "lucide-react";
+
+const logOut = async () => {
+  const res = await authClient.logout.$post();
+  if (res.redirected) {
+    window.location.href = res.url;
+  } else {
+    window.location.href = "/";
+  }
+};
 
 const UserDropdown = ({ user }: { user: User }) => {
   return (
@@ -22,17 +32,9 @@ const UserDropdown = ({ user }: { user: User }) => {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem
-          onClick={async () => {
-            const res = await authClient.logout.$post();
-            if (res.redirected) {
-              window.location.href = res.url;
-            } else {
-              window.location.href = "/";
-            }
-          }}
-        >
-          Log out
+        <DropdownMenuItem onClick={logOut}>
+          <LogOut />
+          <span className="ml-auto">Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

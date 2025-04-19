@@ -31,7 +31,11 @@ export const getArticle = async (
 
 export const getArticles = async (userId: number) => {
   return db
-    .select({ id: articlesTable.id, title: articlesTable.title })
+    .select({
+      id: articlesTable.id,
+      title: articlesTable.title,
+      createdAt: articlesTable.createdAt,
+    })
     .from(articlesTable)
     .where(eq(articlesTable.userId, userId));
 };

@@ -1,14 +1,12 @@
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import React from "react";
-import Link from "next/link";
 import type { User } from "@/lib/types";
 import UserDropdown from "@/components/user-dropdown";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 type NavbarProps = {
   user: User;
@@ -16,32 +14,16 @@ type NavbarProps = {
 
 const Navbar = ({ user }: NavbarProps) => {
   return (
-    <div className="flex justify-between items-center px-8 py-4 bg-card">
-      <Link href="/" className="text-xl font-semibold">
-        Shuffle
-      </Link>
-      <NavigationMenu>
+    <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center border-b px-4 z-10">
+      <SidebarTrigger />
+      <NavigationMenu className="ml-auto">
         <NavigationMenuList className="relative gap-1">
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link className={navigationMenuTriggerStyle()} href="/">
-                Add Article
-              </Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link className={navigationMenuTriggerStyle()} href="/articles">
-                My Articles
-              </Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
           <NavigationMenuItem>
             <UserDropdown user={user} />
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
-    </div>
+    </header>
   );
 };
 

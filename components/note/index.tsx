@@ -116,19 +116,19 @@ const Note = ({ note }: { note: NoteType }) => {
         onSubmit={handleSubmit}
       >
         <input
-          className="text-xl font-semibold -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
+          className="text-lg font-medium -mx-2 px-2 py-1 -my-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           placeholder="Entry"
           name="entry"
           defaultValue={note.entry}
         />
         <input
-          className="text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
+          className="text-sm text-muted-foreground -mx-2 px-2 py-1 -my-1 rounded-sm outline-none mt-2 focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="type"
           defaultValue={note.type ? note.type : undefined}
           placeholder={"Category"}
         />
         <textarea
-          className="my-4 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
+          className="my-2 resize-none -mx-2 px-2 py-1 rounded-sm outline-none focus-visible:bg-stone-200/50 dark:focus-visible:bg-stone-700/50 transition"
           name="note"
           placeholder={"Add your comments here..."}
           defaultValue={note.note ? note.note : undefined}
@@ -196,14 +196,14 @@ const Note = ({ note }: { note: NoteType }) => {
       onClick={() => setEdit(true)}
     >
       <div className="flex justify-between items-center">
-        <dt className="text-xl text-wrap font-semibold">{note.entry}</dt>
+        <dt className="text-lg text-wrap font-medium">{note.entry}</dt>
         <PencilLine className="opacity-0 group-hover:opacity-100 text-muted-foreground transition-opacity" />
       </div>
-      <div className="pl-4 border-l-4 has-[*]:mt-4">
+      <div className="pl-3 border-l-2 has-[*]:mt-2">
         {note.type && (
-          <div className="text-muted-foreground my-2">{note.type}</div>
+          <div className="text-muted-foreground text-sm my-3">{note.type}</div>
         )}
-        {note.note && <dd className="mt-4">{note.note}</dd>}
+        {note.note && <dd className="mt-3">{note.note}</dd>}
       </div>
     </div>
   );
@@ -215,17 +215,16 @@ const Notes = ({ notes }: NotesProps) => {
   );
 
   return (
-    // translate y to align with article heading
-    <div className="-m-4 md:m-0 translate-y-0.5">
-      <header className="mb-6 mx-4">
-        <h2 className="font-bold text-2xl">My notes</h2>
+    <>
+      <header className="mb-4">
+        <h2 className="font-bold text-xl">My notes</h2>
       </header>
-      <dl className="space-y-1">
+      <dl className="space-y-1 -mx-4">
         {notes.map((note) => (
           <Note note={note} key={note.id} />
         ))}
       </dl>
-    </div>
+    </>
   );
 };
 

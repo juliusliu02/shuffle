@@ -4,6 +4,8 @@ import { validateSessionToken } from "@/server/services/auth";
 import { cookies } from "next/headers";
 import { SESSION_COOKIE_NAME } from "@/server/utils/cookie";
 import { redirect } from "next/navigation";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/app-sidebar";
 
 export default async function AppLayout({
   children,
@@ -20,11 +22,12 @@ export default async function AppLayout({
   }
 
   return (
-    <>
-      <div className="fixed w-full top-0 z-10">
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
         <Navbar user={user} />
-      </div>
-      {children}
-    </>
+        {children}
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

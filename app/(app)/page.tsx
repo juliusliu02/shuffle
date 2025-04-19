@@ -3,11 +3,11 @@ import { PageTitle } from "@/components/typography";
 
 export default function Home() {
   return (
-    <div className="mt-32 mx-auto max-w-2xl px-10 flex flex-col">
-      <PageTitle className="mb-8">Add a new article</PageTitle>
-      <div>
-        <NewArticleForm />
-      </div>
+    <div className="m-auto w-full max-w-3xl px-10 flex flex-col justify-around">
+      <PageTitle className="mb-10 text-center">
+        Add an article to start annotation.
+      </PageTitle>
+      <NewArticleForm />
     </div>
   );
 }
