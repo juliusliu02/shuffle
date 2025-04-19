@@ -1,11 +1,21 @@
 "use client";
-import { Sidebar, SidebarContent, SidebarGroup } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 import React, { useEffect, useState } from "react";
 import type { ArticleListItem } from "@/lib/types";
 import { appClient } from "@/lib/rpc/app-cli";
 import { notFound } from "next/navigation";
 import { LoadingSpinner } from "@/components/loading";
 import ArticleList from "@/components/app-sidebar/article-list";
+import { FilePlus2 } from "lucide-react";
+import Link from "next/link";
 
 const getArticleIdOnPage = () => {
   if (typeof window === "undefined") {
@@ -60,6 +70,25 @@ const AppSidebar = () => {
 
   return (
     <Sidebar>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              isActive={active === undefined}
+              onClick={() => setActive(undefined)}
+              asChild
+            >
+              <Link href="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                  <FilePlus2 className="size-4" />
+                </div>
+                <div className="font-medium">New article</div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <ArticleList
