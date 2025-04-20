@@ -4,7 +4,7 @@ import {
   type ArticleWithNotesAndHighlights,
   type NoteWithHighlights as NoteType,
 } from "@/lib/types";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { appClient } from "@/lib/rpc/app-cli";
 import { type InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
 
 type NotesProps = {
   notes: NoteType[];
@@ -145,7 +146,8 @@ const Note = ({ note }: { note: NoteType }) => {
             <AlertDialogTrigger asChild>
               <Button
                 type={"button"}
-                className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-800 text-amber-50"
+                variant={"destructive"}
+                className="text-amber-50"
               >
                 <Trash2 />
               </Button>
@@ -161,7 +163,7 @@ const Note = ({ note }: { note: NoteType }) => {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  className="bg-amber-800 hover:bg-amber-900 dark:bg-amber-700 dark:hover:bg-amber-800 text-amber-50"
+                  className={cn(buttonVariants({ variant: "destructive" }))}
                   onClick={handleDelete}
                 >
                   Continue

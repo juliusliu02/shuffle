@@ -16,12 +16,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Ellipsis } from "lucide-react";
+import { Archive, Ellipsis, Trash2 } from "lucide-react";
 import { appClient } from "@/lib/rpc/app-cli";
 import type { InferRequestType } from "hono";
 import useSWRMutation from "swr/mutation";
 import type { ArticleListItem } from "@/lib/types";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const $patch = appClient.articles[":id"].$patch;
 
@@ -45,21 +46,33 @@ const archiveArticle = async (
   return response;
 };
 
+const $delete = appClient.articles[":id"].$delete;
+
+const deleteArticle = async (
+  _key: string,
+  { arg }: { arg: InferRequestType<typeof $delete> },
+) => {
+  const response = await $delete(arg);
+  if (response.status !== 204) {
+    const data = await response.json();
+    throw new Error(data.error);
+  }
+  return response;
+};
+
 const ItemAction = ({ id }: { id: number }) => {
-  const { trigger, isMutating } = useSWRMutation(
-    "/api/articles",
-    archiveArticle,
-    {
+  const router = useRouter();
+  const { trigger: archiveTrigger, isMutating: archiveMutating } =
+    useSWRMutation("/api/articles", archiveArticle, {
       populateCache: (_data, current: ArticleListItem[] = []) =>
         current.filter((item) => item.id !== id),
       revalidate: false,
       rollbackOnError: true,
-    },
-  );
+    });
 
   const handleArchive = async () => {
     try {
-      await trigger({
+      await archiveTrigger({
         json: {
           isArchived: true,
         },
@@ -69,12 +82,44 @@ const ItemAction = ({ id }: { id: number }) => {
       });
 
       toast.success("Article archived successfully.");
+      router.push("/");
     } catch (error) {
       let description;
       if (error instanceof Error) {
         description = error.message;
       }
       toast.error("Failed to archive article.", { description });
+    }
+  };
+
+  const { trigger: deleteTrigger } = useSWRMutation(
+    "/api/articles",
+    deleteArticle,
+    {
+      populateCache: (_data, current: ArticleListItem[] = []) =>
+        current.filter((item) => item.id !== id),
+      revalidate: false,
+      rollbackOnError: true,
+    },
+  );
+
+  const handleDelete = async () => {
+    try {
+      await deleteTrigger({
+        param: {
+          id: id.toString(),
+        },
+      });
+      toast.success("Article deleted successfully.");
+      router.push("/");
+    } catch (error) {
+      let description;
+      if (error instanceof Error) {
+        description = error.message;
+      }
+      toast.error("Failed to delete article. Please try again later.", {
+        description,
+      });
     }
   };
 
@@ -85,12 +130,14 @@ const ItemAction = ({ id }: { id: number }) => {
           <Ellipsis size={16} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align={"start"}>
-          <DropdownMenuItem disabled={isMutating} onClick={handleArchive}>
-            Archive
+          <DropdownMenuItem disabled={archiveMutating} onClick={handleArchive}>
+            <Archive />
+            <span className="ml-1">Archive</span>
           </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem>
-              <span>Delete</span>
+              <Trash2 />
+              <span className="ml-1">Delete</span>
             </DropdownMenuItem>
           </DialogTrigger>
         </DropdownMenuContent>
@@ -100,11 +147,13 @@ const ItemAction = ({ id }: { id: number }) => {
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
             This action cannot be undone. Are you sure you want to permanently
-            delete this file from our servers?
+            delete this article?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button type="button">Confirm</Button>
+          <Button variant="destructive" onClick={handleDelete}>
+            Delete
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
