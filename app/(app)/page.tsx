@@ -1,4 +1,4 @@
-import NewArticleForm from "@/components/new-article-form";
+import NewArticleForm from "@/components/article/new-article-form";
 import { PageTitle } from "@/components/typography";
 
 export default function Home() {

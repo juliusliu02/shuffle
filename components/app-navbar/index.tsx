@@ -2,6 +2,7 @@ import React from "react";
 
 import Link from "next/link";
 
+import UserDropdown from "@/components/app-navbar/user-dropdown";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import UserDropdown from "@/components/user-dropdown";
 import type { User } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ type NavbarProps = {
   user: User;
 };
 
-const Navbar = ({ user }: NavbarProps) => {
+const AppNavbar = ({ user }: NavbarProps) => {
   return (
     <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center border-b px-4 z-10">
       <SidebarTrigger />
@@ -48,4 +48,4 @@ const Navbar = ({ user }: NavbarProps) => {
   );
 };
 
-export default Navbar;
+export default AppNavbar;

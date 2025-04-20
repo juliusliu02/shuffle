@@ -3,8 +3,8 @@ import React from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import AppNavbar from "@/components/app-navbar";
 import AppSidebar from "@/components/app-sidebar";
-import Navbar from "@/components/navbar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { validateSessionToken } from "@/server/services/auth";
 import { SESSION_COOKIE_NAME } from "@/server/utils/cookie";
@@ -27,7 +27,7 @@ export default async function AppLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <Navbar user={user} />
+        <AppNavbar user={user} />
         {children}
       </SidebarInset>
     </SidebarProvider>
