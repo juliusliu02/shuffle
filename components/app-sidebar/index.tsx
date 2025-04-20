@@ -1,20 +1,16 @@
 "use client";
-import React, { useMemo } from "react";
+import React from "react";
 
-import { FilePlus2 } from "lucide-react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useSWR from "swr";
 
 import ArticleList from "@/components/app-sidebar/article-list";
+import QuerySwitcher from "@/components/app-sidebar/query-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { appClient } from "@/lib/rpc/app-cli";
 import type { ArticleListItem } from "@/lib/types";
@@ -27,18 +23,9 @@ const fetcher = async (): Promise<ArticleListItem[]> => {
 const AppSidebar = () => {
   const { data: articles, error } = useSWR("/api/articles", fetcher);
   const pathname = usePathname();
-
-  const routeId = useMemo<number | undefined>(() => {
-    const m = pathname?.match(/\/articles\/(\d+)/);
-    if (
-      m &&
-      articles &&
-      articles.some((article) => article.id === Number(m[1]))
-    ) {
-      return Number(m[1]);
-    }
-    return undefined;
-  }, [pathname, articles]);
+  // get pathname, match id, get captured group, and cast to number.
+  // the result is either an id or NaN.
+  const active = Number(pathname?.match(/\/articles\/(\d+)/)?.[1]);
 
   if (error) {
     return error();
@@ -47,26 +34,11 @@ const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              isActive={routeId === undefined}
-              asChild
-            >
-              <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <FilePlus2 className="size-4" />
-                </div>
-                <div className="font-medium">New article</div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <QuerySwitcher />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <ArticleList articles={articles ?? []} active={routeId} />
+          <ArticleList articles={articles ?? []} active={active} />
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

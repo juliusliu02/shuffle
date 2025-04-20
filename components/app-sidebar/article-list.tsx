@@ -15,7 +15,7 @@ import { groupArticlesByDate } from "@/lib/utils";
 
 type ArticleListProps = {
   articles: ArticleListItem[];
-  active: number | undefined;
+  active: number;
 };
 
 const ArticleList = ({ articles, active }: ArticleListProps) => {
