@@ -1,5 +1,8 @@
 "use client";
 import React from "react";
+
+import { ChevronDownIcon, LogOut } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
-import { ChevronDownIcon } from "lucide-react";
-import type { User } from "@/lib/types";
 import { authClient } from "@/lib/rpc/auth-cli";
-import { LogOut } from "lucide-react";
+import type { User } from "@/lib/types";
 
 const logOut = async () => {
   const res = await authClient.logout.$post();

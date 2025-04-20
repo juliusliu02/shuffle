@@ -1,12 +1,13 @@
+import React from "react";
+
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import React from "react";
-import type { User } from "@/lib/types";
-import UserDropdown from "@/components/user-dropdown";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import UserDropdown from "@/components/user-dropdown";
+import type { User } from "@/lib/types";
 
 type NavbarProps = {
   user: User;

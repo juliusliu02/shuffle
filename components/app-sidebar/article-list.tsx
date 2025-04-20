@@ -1,4 +1,8 @@
 import React from "react";
+
+import Link from "next/link";
+
+import ItemAction from "@/components/app-sidebar/item-action";
 import {
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -6,10 +10,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
 import type { ArticleListItem } from "@/lib/types";
 import { groupArticlesByDate } from "@/lib/utils";
-import ItemAction from "@/components/app-sidebar/item-action";
 
 type ArticleListProps = {
   articles: ArticleListItem[];

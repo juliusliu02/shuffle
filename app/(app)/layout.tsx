@@ -1,11 +1,13 @@
 import React from "react";
-import Navbar from "@/components/navbar";
-import { validateSessionToken } from "@/server/services/auth";
+
 import { cookies } from "next/headers";
-import { SESSION_COOKIE_NAME } from "@/server/utils/cookie";
 import { redirect } from "next/navigation";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
 import AppSidebar from "@/components/app-sidebar";
+import Navbar from "@/components/navbar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { validateSessionToken } from "@/server/services/auth";
+import { SESSION_COOKIE_NAME } from "@/server/utils/cookie";
 
 export default async function AppLayout({
   children,

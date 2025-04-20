@@ -1,4 +1,12 @@
 "use client";
+import React, { useMemo } from "react";
+
+import { FilePlus2 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import useSWR from "swr";
+
+import ArticleList from "@/components/app-sidebar/article-list";
 import {
   Sidebar,
   SidebarContent,
@@ -8,14 +16,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import React, { useMemo } from "react";
 import { appClient } from "@/lib/rpc/app-cli";
-import ArticleList from "@/components/app-sidebar/article-list";
-import { FilePlus2 } from "lucide-react";
-import Link from "next/link";
-import useSWR from "swr";
 import type { ArticleListItem } from "@/lib/types";
-import { usePathname } from "next/navigation";
 
 const fetcher = async (): Promise<ArticleListItem[]> => {
   const response = await appClient.articles.$get();

@@ -3,6 +3,7 @@ import type {
   DBQueryConfig,
   ExtractTablesWithRelations,
 } from "drizzle-orm";
+
 // ensure this is a type-only file
 import type * as articleSchema from "@/server/db/schema/articles";
 import type * as authSchema from "@/server/db/schema/auth";

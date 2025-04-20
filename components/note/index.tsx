@@ -1,16 +1,12 @@
 "use client";
 import React, { type FormEvent, useCallback } from "react";
-import {
-  type ArticleWithNotesAndHighlights,
-  type NoteWithHighlights as NoteType,
-} from "@/lib/types";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { appClient } from "@/lib/rpc/app-cli";
+
 import { type InferRequestType } from "hono";
-import useSWRMutation from "swr/mutation";
-import { mutate as globalMutate } from "swr";
 import { PencilLine, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { mutate as globalMutate } from "swr";
+import useSWRMutation from "swr/mutation";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +18,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { appClient } from "@/lib/rpc/app-cli";
+import {
+  type ArticleWithNotesAndHighlights,
+  type NoteWithHighlights as NoteType,
+} from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type NotesProps = {

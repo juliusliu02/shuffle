@@ -1,5 +1,13 @@
 "use client";
-import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { type z } from "zod";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,14 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
-import { type z } from "zod";
-import { useForm } from "react-hook-form";
-import { signupSchema } from "@/lib/schemas/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { authClient } from "@/lib/rpc/auth-cli";
-import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -23,8 +23,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/rpc/auth-cli";
+import { signupSchema } from "@/lib/schemas/auth";
+import { cn } from "@/lib/utils";
 
 const $post = authClient.signup.$post;
 

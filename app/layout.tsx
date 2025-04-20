@@ -1,7 +1,10 @@
-import React from "react";
-import type { Metadata } from "next";
-import { Inter, EB_Garamond } from "next/font/google";
 import "./globals.css";
+
+import React from "react";
+
+import type { Metadata } from "next";
+import { EB_Garamond, Inter } from "next/font/google";
+
 import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({

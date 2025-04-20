@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { hightlightWithoutNoteIdSchema } from "@/lib/schemas/highlights";
 
 export const createNoteSchema = z.object({

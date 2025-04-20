@@ -1,11 +1,12 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+
+import { Mark } from "@/components/typography";
 import {
   type ArticleWithNotesAndHighlights,
   type Highlight,
   type NoteWithHighlights,
 } from "@/lib/types";
-import { Mark } from "@/components/typography";
+import { cn } from "@/lib/utils";
 
 type WithClass = {
   className?: string;

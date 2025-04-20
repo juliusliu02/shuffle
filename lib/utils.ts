@@ -1,7 +1,8 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-import type { ArticleListItem } from "@/lib/types";
+import { type ClassValue, clsx } from "clsx";
 import dayjs from "dayjs";
+import { twMerge } from "tailwind-merge";
+
+import type { ArticleListItem } from "@/lib/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

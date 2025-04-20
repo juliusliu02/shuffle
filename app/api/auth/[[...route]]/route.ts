@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
+
 import AuthApp from "@/server/controllers/auth";
 import { initGlobalMiddleware } from "@/server/middlewares";
 

@@ -1,5 +1,7 @@
 import React from "react";
+
 import { GalleryVerticalEnd } from "lucide-react";
+
 import { SignupForm } from "@/components/auth/signup-form";
 
 const Page = () => {
