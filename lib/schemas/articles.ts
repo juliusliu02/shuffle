@@ -9,3 +9,7 @@ export const createArticleSchema = z.object({
     .transform((val) => val.replace(/\r\n/g, "\n").replaceAll(/\n+/g, "\n")),
   source: z.string().optional(),
 });
+
+export const toggleArchiveSchema = z.object({
+  isArchived: z.boolean(),
+});

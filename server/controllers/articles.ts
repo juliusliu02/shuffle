@@ -1,5 +1,8 @@
 import { Hono } from "hono";
-import { createArticleSchema } from "@/lib/schemas/articles";
+import {
+  createArticleSchema,
+  toggleArchiveSchema,
+} from "@/lib/schemas/articles";
 import { zValidator } from "@hono/zod-validator";
 import * as articleService from "@/server/services/articles";
 import { requireAuth } from "@/server/middlewares/auth";
@@ -35,6 +38,23 @@ const ArticleApp = new Hono()
       return c.json({ error: "Article not found" }, 404);
     }
     return c.json(article, 200);
+  })
+  .patch("/:id", zValidator("json", toggleArchiveSchema), async (c) => {
+    const { id } = c.req.param();
+    const { isArchived } = c.req.valid("json");
+    const articleId = Number(id);
+    if (isNaN(articleId)) {
+      return c.json({ error: "Invalid article id" }, 400);
+    }
+    const result = await articleService.setArchive(
+      articleId,
+      isArchived,
+      c.get("user").id,
+    );
+    if (result.rowsAffected === 0) {
+      return c.json({ error: "Article not found" }, 404);
+    }
+    return c.body(null, 204);
   })
   .delete("/:id", async (c) => {
     const { id } = c.req.param();

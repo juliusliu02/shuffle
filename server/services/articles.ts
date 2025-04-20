@@ -17,16 +17,25 @@ export const createArticle = async (
   });
 };
 
+export const setArchive = async (
+  id: number,
+  isArchived: boolean,
+  userId: number,
+) => {
+  return db
+    .update(articlesTable)
+    .set({
+      isArchived,
+    })
+    .where(and(eq(articlesTable.id, id), eq(articlesTable.userId, userId)));
+};
+
 export const getArticle = async (
   id: number,
   userId: number,
 ): Promise<ArticleWithNotesAndHighlights | undefined> => {
   return db.query.articlesTable.findFirst({
-    where: and(
-      eq(articlesTable.id, id),
-      eq(articlesTable.userId, userId),
-      eq(articlesTable.isArchived, false),
-    ),
+    where: and(eq(articlesTable.id, id), eq(articlesTable.userId, userId)),
     with: {
       notes: {
         with: {
@@ -37,7 +46,12 @@ export const getArticle = async (
   });
 };
 
-export const getArticles = async (userId: number) => {
+// returns not archived articles for now
+// TODO: support archived
+export const getArticles = async (
+  userId: number,
+  isArchived: boolean = false,
+) => {
   return db
     .select({
       id: articlesTable.id,
@@ -45,7 +59,12 @@ export const getArticles = async (userId: number) => {
       createdAt: articlesTable.createdAt,
     })
     .from(articlesTable)
-    .where(eq(articlesTable.userId, userId));
+    .where(
+      and(
+        eq(articlesTable.userId, userId),
+        eq(articlesTable.isArchived, isArchived),
+      ),
+    );
 };
 
 export const deleteArticle = async (id: number, userId: number) => {
