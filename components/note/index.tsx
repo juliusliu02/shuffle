@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { mutate as globalMutate } from "swr";
 import useSWRMutation from "swr/mutation";
 
+import { accentButtonVariants } from "@/components/typography";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -182,7 +183,7 @@ const Note = ({ note }: { note: NoteType }) => {
               Cancel
             </Button>
             <Button
-              className={"bg-amber-300 hover:bg-amber-400 text-slate-800"}
+              className={accentButtonVariants()}
               type="submit"
               disabled={isMutating}
             >
@@ -196,7 +197,7 @@ const Note = ({ note }: { note: NoteType }) => {
 
   return (
     <div
-      className="hover:bg-stone-100 dark:hover:bg-stone-700 p-4 sm:rounded-xl transition hover:not-focus:cursor-pointer group"
+      className="bg-background hover:bg-accent p-4 sm:rounded-xl transition hover:not-focus:cursor-pointer group"
       onClick={() => setEdit(true)}
     >
       <div className="flex justify-between items-center">

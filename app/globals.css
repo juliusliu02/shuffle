@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 /*---break---*/
-@custom-variant dark (&:is(.dark *));
-
 /*@custom-variant dark (&:is(.dark *));*/
 
 :root {
@@ -111,7 +109,7 @@
     --accent: oklch(0.268 0.007 34.298);
     --accent-foreground: oklch(0.985 0.001 106.423);
     /*--destructive: oklch(0.704 0.191 22.216);*/
-    --destructive: var(--color-amber-700);
+    --destructive: var(--color-rose-700);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
     --ring: oklch(0.553 0.013 58.071);
@@ -122,7 +120,8 @@
     --chart-5: oklch(0.645 0.246 16.439);
     --sidebar: oklch(0.216 0.006 56.043);
     --sidebar-foreground: oklch(0.985 0.001 106.423);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary: var(--color-amber-700);
+    /*--sidebar-primary: oklch(0.488 0.243 264.376);*/
     --sidebar-primary-foreground: oklch(0.985 0.001 106.423);
     --sidebar-accent: oklch(0.268 0.007 34.298);
     --sidebar-accent-foreground: oklch(0.985 0.001 106.423);
@@ -156,10 +155,12 @@
 .dark {
   --sidebar: hsl(240 5.9% 10%);
   --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary: var(--color-amber-700);
+  /*--sidebar-primary: hsl(224.3 76.3% 48%);*/
   --sidebar-primary-foreground: hsl(0 0% 100%);
   --sidebar-accent: hsl(240 3.7% 15.9%);
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  --sidebar-ring: var(--color-amber-500);
+  /*--sidebar-ring: hsl(217.2 91.2% 59.8%);*/
 }

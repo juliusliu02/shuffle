@@ -9,10 +9,12 @@ import useSWR, { mutate as globalMutate } from "swr";
 import { Article } from "@/components/article";
 import { LoadingSpinner } from "@/components/loading";
 import Notes from "@/components/note";
+import { accentButtonVariants } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { useTextRange } from "@/hooks/use-text-range";
 import { appClient } from "@/lib/rpc/app-cli";
 import { type ArticleWithNotesAndHighlights } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 const $get = appClient.articles[":id"].$get;
 
@@ -120,14 +122,14 @@ const Page = () => {
         <Article article={data} ref={containerRef} />
       </div>
       <Button
-        className="fixed bottom-4 right-4 z-10 bg-amber-300 hover:bg-amber-400 text-slate-800"
+        className={cn(accentButtonVariants(), "fixed bottom-4 right-4 z-10")}
         onClick={handleClick}
       >
         Add notes
       </Button>
       <aside
         className="px-8 relative w-full
-        lg:shrink-0 lg:pt-[3.75rem] lg:scrollbar-hidden lg:overflow-y-scroll lg:w-80 lg:right-8"
+        lg:shrink-0 lg:top-14 lg:scrollbar-hidden lg:overflow-y-scroll lg:w-80 lg:right-8"
       >
         <Notes notes={data.notes} />
       </aside>

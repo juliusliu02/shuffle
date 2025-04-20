@@ -28,3 +28,6 @@ export const Mark = ({
     </mark>
   );
 };
+
+export const accentButtonVariants = () =>
+  "bg-amber-300 hover:bg-amber-400 dark:bg-amber-700 dark:hover:bg-amber-600 text-primary";
