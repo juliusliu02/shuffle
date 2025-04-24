@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Switch } from "@/components/ui/switch";
 import type { User } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,11 @@ const AppNavbar = ({ user }: NavbarProps) => {
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-medium">Page view</span>
+            <Switch />
+            <span className="text-sm font-medium">Flashcard view</span>
+          </div>
           <NavigationMenuItem>
             <UserDropdown user={user} />
           </NavigationMenuItem>
