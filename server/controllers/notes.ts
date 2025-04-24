@@ -1,13 +1,14 @@
-import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+
 import {
   createNoteWithHighlightSchema,
   deleteNoteSchema,
   updateNoteSchema,
 } from "@/lib/schemas/notes";
-import * as noteService from "@/server/services/notes";
 import { type NoteInsertWithHighlights } from "@/lib/types";
 import { requireAuth } from "@/server/middlewares/auth";
+import * as noteService from "@/server/services/notes";
 
 const NoteApp = new Hono()
   .use(requireAuth())

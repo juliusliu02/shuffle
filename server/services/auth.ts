@@ -1,13 +1,14 @@
-import type { Session, User } from "@/lib/types";
+import * as argon2 from "@node-rs/argon2";
+import { sha256 } from "@oslojs/crypto/sha2";
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding";
-import { sha256 } from "@oslojs/crypto/sha2";
-import { sessionsTable, usersTable } from "@/server/db/schema/auth";
-import { db } from "@/server/db";
 import { eq } from "drizzle-orm";
-import * as argon2 from "@node-rs/argon2";
+
+import type { Session, User } from "@/lib/types";
+import { db } from "@/server/db";
+import { sessionsTable, usersTable } from "@/server/db/schema/auth";
 
 /* Password authentication */
 export async function createUser(

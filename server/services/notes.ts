@@ -1,10 +1,7 @@
-import { db } from "../db";
-import {
-  articlesTable,
-  authorizedNotesView,
-  highlightsTable,
-  notesTable,
-} from "@/server/db/schema/articles";
+import { and, eq } from "drizzle-orm";
+import { type z } from "zod";
+
+import { type updateNoteSchema } from "@/lib/schemas/notes";
 import type {
   HighlightInsert,
   NoteInsertWithHighlights,
@@ -12,10 +9,15 @@ import type {
   Highlight,
   Note,
 } from "@/lib/types";
-import { and, eq } from "drizzle-orm";
-import { type updateNoteSchema } from "@/lib/schemas/notes";
-import { type z } from "zod";
+import {
+  articlesTable,
+  authorizedNotesView,
+  highlightsTable,
+  notesTable,
+} from "@/server/db/schema/articles";
 import { NotFoundError } from "@/server/utils/error";
+
+import { db } from "../db";
 
 export const createNote = async (
   userId: number,

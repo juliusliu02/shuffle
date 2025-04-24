@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import type { ArticleListItem } from "@/lib/types";
-import { groupArticlesByDate } from "@/lib/utils";
+import { groupArticlesByDate } from "@/lib/utils/date";
 
 type ArticleListProps = {
   articles: ArticleListItem[];

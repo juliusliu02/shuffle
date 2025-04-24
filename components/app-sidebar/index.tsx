@@ -28,7 +28,7 @@ const AppSidebar = () => {
   const active = Number(pathname?.match(/\/articles\/(\d+)/)?.[1]);
 
   if (error) {
-    return error();
+    return null;
   }
 
   return (
