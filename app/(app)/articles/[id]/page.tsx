@@ -114,10 +114,10 @@ const Page = () => {
   };
 
   return (
-    <div className="lg:flex">
+    <div className="relative lg:flex overscroll-y-contain h-[calc(100vh-4rem)] overflow-y-auto">
       <div
         className="mt-12 break-words
-                      lg:max-w-2xl lg:w-2/3 px-8 lg:mx-auto lg:pr-12 mb-12"
+        lg:max-w-2xl lg:w-2/3 px-8 lg:mx-auto lg:pr-12 mb-12"
       >
         <Article article={data} ref={containerRef} />
       </div>
@@ -128,8 +128,9 @@ const Page = () => {
         Add notes
       </Button>
       <aside
-        className="px-8 relative w-full
-        lg:shrink-0 lg:top-14 lg:scrollbar-hidden lg:overflow-y-scroll lg:w-80 lg:right-8"
+        className="w-full lg:sticky lg:self-start
+        lg:shrink-0 lg:top-14 lg:w-80 lg:right-8 lg:bottom-4
+        lg:max-h-[calc(100vh-12rem)] lg:overflow-y-scroll lg:scrollbar-hidden px-8"
       >
         <Notes notes={data.notes} />
       </aside>
