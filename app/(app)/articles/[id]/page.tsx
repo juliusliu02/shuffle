@@ -94,7 +94,7 @@ const Page = () => {
       await globalMutate(
         `/api/articles/${id}`,
         (old: ArticleWithNotesAndHighlights | undefined) => {
-          if (!old) return old; // first load hasn’t finished yet
+          if (!old) return old; // the first load hasn’t finished yet
           return {
             ...old,
             notes: [...old.notes, data.note],

@@ -1,5 +1,6 @@
-import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+
 import { loginSchema, signupSchema } from "@/lib/schemas/auth";
 import * as authService from "@/server/services/auth";
 import {

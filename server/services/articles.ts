@@ -1,11 +1,13 @@
+import { and, eq } from "drizzle-orm";
+
 import {
   type ArticleInsert,
   type ArticleListItem,
   type ArticleWithNotesAndHighlights,
 } from "@/lib/types";
-import { db } from "../db";
 import { articlesTable } from "@/server/db/schema/articles";
-import { and, eq } from "drizzle-orm";
+
+import { db } from "../db";
 
 export const createArticle = async (
   data: ArticleInsert,

@@ -1,12 +1,13 @@
+import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
+
 import {
   createArticleSchema,
   toggleArchiveSchema,
 } from "@/lib/schemas/articles";
-import { zValidator } from "@hono/zod-validator";
-import * as articleService from "@/server/services/articles";
-import { requireAuth } from "@/server/middlewares/auth";
 import type { ArticleInsert } from "@/lib/types";
+import { requireAuth } from "@/server/middlewares/auth";
+import * as articleService from "@/server/services/articles";
 
 const ArticleApp = new Hono()
   .use(requireAuth())

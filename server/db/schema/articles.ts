@@ -1,5 +1,6 @@
-import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
 import { eq, relations, sql } from "drizzle-orm";
+import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
+
 import { usersTable } from "@/server/db/schema/auth";
 
 // stores articles
