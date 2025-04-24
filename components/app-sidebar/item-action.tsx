@@ -2,7 +2,8 @@
 import React from "react";
 
 import type { InferRequestType } from "hono";
-import { Archive, Ellipsis, Trash2 } from "lucide-react";
+import { Archive, Download, Ellipsis, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
@@ -132,6 +133,12 @@ const ItemAction = ({ id }: { id: number }) => {
           <Ellipsis size={16} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align={"start"}>
+          <DropdownMenuItem asChild>
+            <Link href={`/api/articles/${id}/flashcards`}>
+              <Download />
+              <span className="ml-1">Export</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem disabled={archiveMutating} onClick={handleArchive}>
             <Archive />
             <span className="ml-1">Archive</span>
