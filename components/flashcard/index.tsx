@@ -1,5 +1,7 @@
 import React from "react";
 
+import Link from "next/link";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,27 +21,33 @@ import {
 import type { NoteWithHighlights } from "@/lib/types";
 
 type FlashcardProps = {
+  source: string | null;
+  title: string;
   note: NoteWithHighlights;
 };
 
-const Flashcard = ({ note }: FlashcardProps) => {
+const Flashcard = ({ source, title, note }: FlashcardProps) => {
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLParagraphElement>(null);
 
   return (
-    <Card className="w-[40rem] gap-4 group" onClick={() => setOpen(true)}>
+    <Card className="gap-4 group" onClick={() => setOpen(!open)}>
       <CardHeader>
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/articles/${note.articleId}`}>
-                Articles
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{note.entry}</BreadcrumbPage>
-            </BreadcrumbItem>
+            {source && (
+              <>
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-muted-foreground">
+                    {source}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+              </>
+            )}
+            <BreadcrumbLink asChild>
+              <Link href={`/articles/${note.articleId}`}>{title}</Link>
+            </BreadcrumbLink>
           </BreadcrumbList>
         </Breadcrumb>
       </CardHeader>
