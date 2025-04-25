@@ -12,9 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Switch } from "@/components/ui/switch";
 import type { User } from "@/lib/types";
-import { cn } from "@/lib/utils";
 
 type NavbarProps = {
   user: User;
@@ -24,27 +22,27 @@ const AppNavbar = ({ user }: NavbarProps) => {
   return (
     <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center border-b px-4 z-10">
       <SidebarTrigger />
-      <div className="mx-2 h-4">
+      <div className="ml-2 mr-1 h-4">
         <Separator orientation="vertical" />
       </div>
       {/* let wrapper div grow to full width */}
       <NavigationMenu className="[&>div]:flex-1 w-full max-w-full">
-        <NavigationMenuList className="justify-between">
+        <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link
-                className={cn(navigationMenuTriggerStyle(), "px-2")}
-                href="/"
-              >
-                New Article
+              <Link className={navigationMenuTriggerStyle()} href="/">
+                Articles
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium">Page view</span>
-            <Switch />
-            <span className="text-sm font-medium">Flashcard view</span>
-          </div>
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link className={navigationMenuTriggerStyle()} href="#">
+                Flashcards
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <div className="flex-1"></div>
           <NavigationMenuItem>
             <UserDropdown user={user} />
           </NavigationMenuItem>

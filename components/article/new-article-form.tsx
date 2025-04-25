@@ -28,7 +28,7 @@ const $post = appClient.articles.$post;
 type CreateArticleResponse = Awaited<ReturnType<typeof createArticle>>;
 
 const createArticle = async (
-  _key: string,
+  _key: [string, boolean],
   { arg }: { arg: InferRequestType<typeof $post> },
 ): Promise<ArticleListItem> => {
   const response = await $post(arg);
@@ -46,7 +46,7 @@ const NewArticleForm = () => {
   });
 
   const { trigger, isMutating } = useSWRMutation(
-    "/api/articles",
+    ["/api/articles", false],
     createArticle,
     {
       populateCache: (data, current: ArticleListItem[] = []) => [
