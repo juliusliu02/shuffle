@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { type InferRequestType } from "hono";
 import { notFound, useParams } from "next/navigation";
@@ -29,6 +29,12 @@ const Page = () => {
     `/api/articles/${id}`,
     fetcher({ param: { id } }),
   );
+
+  useEffect(() => {
+    if (data) {
+      document.title = `${data.title} | Shuffle`;
+    }
+  }, [data]);
 
   const [view, setView] = React.useState<ViewType>("annotation");
   const toggleView = () => {
