@@ -29,11 +29,11 @@ const AppSidebar = () => {
   // get pathname, match id, get captured group, and cast to number.
   // the result is either an id or NaN.
   const active = Number(pathname?.match(/\/articles\/(\d+)/)?.[1]);
-  const [archive, setArchive] = useState<boolean>(false);
-  const { data: articles, error } = useSWR(["/api/articles", archive], () =>
+  const [isArchived, setIsArchived] = useState<boolean>(false);
+  const { data: articles, error } = useSWR(["/api/articles", isArchived], () =>
     fetcher({
       query: {
-        archive: archive.toString(),
+        archive: isArchived.toString(),
       },
     }),
   );
@@ -45,13 +45,13 @@ const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <QuerySwitcher archive={archive} setArchive={setArchive} />
+        <QuerySwitcher isArchive={isArchived} setIsArchive={setIsArchived} />
       </SidebarHeader>
       <SidebarContent>
         <ArticleList
           articles={articles ?? []}
           active={active}
-          isArchived={archive}
+          isArchived={isArchived}
         />
       </SidebarContent>
     </Sidebar>
