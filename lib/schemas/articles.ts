@@ -13,3 +13,7 @@ export const createArticleSchema = z.object({
 export const toggleArchiveSchema = z.object({
   isArchived: z.boolean(),
 });
+
+export const getArticlesSchema = z.object({
+  archive: z.preprocess((val) => val === "true", z.boolean()).default(false),
+});

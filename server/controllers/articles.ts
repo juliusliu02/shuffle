@@ -3,6 +3,7 @@ import { Hono } from "hono";
 
 import {
   createArticleSchema,
+  getArticlesSchema,
   toggleArchiveSchema,
 } from "@/lib/schemas/articles";
 import type { ArticleInsert } from "@/lib/types";
@@ -12,8 +13,12 @@ import { generateAnkiCSV } from "@/server/utils/export";
 
 const ArticleApp = new Hono()
   .use(requireAuth())
-  .get("/", async (c) => {
-    const articles = await articleService.getArticles(c.get("user").id);
+  .get("/", zValidator("query", getArticlesSchema), async (c) => {
+    const { archive } = c.req.valid("query");
+    const articles = await articleService.getArticles(
+      c.get("user").id,
+      archive,
+    );
     return c.json(articles, 200);
   })
   .post("/", zValidator("json", createArticleSchema), async (c) => {

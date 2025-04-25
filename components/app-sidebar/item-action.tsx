@@ -30,7 +30,7 @@ import type { ArticleListItem } from "@/lib/types";
 const $patch = appClient.articles[":id"].$patch;
 
 const archiveArticle = async (
-  _key: string,
+  _key: [string, boolean],
   { arg }: { arg: InferRequestType<typeof $patch> },
 ) => {
   const response = await $patch(arg);
@@ -52,7 +52,7 @@ const archiveArticle = async (
 const $delete = appClient.articles[":id"].$delete;
 
 const deleteArticle = async (
-  _key: string,
+  _key: [string, boolean],
   { arg }: { arg: InferRequestType<typeof $delete> },
 ) => {
   const response = await $delete(arg);
@@ -63,10 +63,15 @@ const deleteArticle = async (
   return response;
 };
 
-const ItemAction = ({ id }: { id: number }) => {
+type ItemActionProps = {
+  id: number;
+  isArchived: boolean;
+};
+
+const ItemAction = ({ id, isArchived }: ItemActionProps) => {
   const router = useRouter();
   const { trigger: archiveTrigger, isMutating: archiveMutating } =
-    useSWRMutation("/api/articles", archiveArticle, {
+    useSWRMutation(["/api/articles", isArchived], archiveArticle, {
       populateCache: (_data, current: ArticleListItem[] = []) =>
         current.filter((item) => item.id !== id),
       revalidate: false,
@@ -77,26 +82,26 @@ const ItemAction = ({ id }: { id: number }) => {
     try {
       await archiveTrigger({
         json: {
-          isArchived: true,
+          isArchived: !isArchived,
         },
         param: {
           id: id.toString(),
         },
       });
 
-      toast.success("Article archived successfully.");
+      toast.success("Article toggled successfully.");
       router.push("/");
     } catch (error) {
       let description;
       if (error instanceof Error) {
         description = error.message;
       }
-      toast.error("Failed to archive article.", { description });
+      toast.error("Failed to toggle archive for the article.", { description });
     }
   };
 
   const { trigger: deleteTrigger } = useSWRMutation(
-    "/api/articles",
+    ["/api/articles", isArchived],
     deleteArticle,
     {
       populateCache: (_data, current: ArticleListItem[] = []) =>
@@ -106,6 +111,9 @@ const ItemAction = ({ id }: { id: number }) => {
     },
   );
 
+  // for dialog
+  const [open, setOpen] = React.useState(false);
+
   const handleDelete = async () => {
     try {
       await deleteTrigger({
@@ -114,6 +122,7 @@ const ItemAction = ({ id }: { id: number }) => {
         },
       });
       toast.success("Article deleted successfully.");
+      setOpen(false);
       router.push("/");
     } catch (error) {
       let description;
@@ -127,12 +136,15 @@ const ItemAction = ({ id }: { id: number }) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu>
         <DropdownMenuTrigger className="ml-auto focus-visible:outline-none opacity-0 group-hover/item:opacity-100 aria-expanded:opacity-100">
           <Ellipsis size={16} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={"start"}>
+        <DropdownMenuContent
+          onClick={(e) => e.stopPropagation()}
+          align={"start"}
+        >
           <DropdownMenuItem asChild>
             <Link href={`/api/articles/${id}/flashcards`}>
               <Download />
@@ -141,7 +153,9 @@ const ItemAction = ({ id }: { id: number }) => {
           </DropdownMenuItem>
           <DropdownMenuItem disabled={archiveMutating} onClick={handleArchive}>
             <Archive />
-            <span className="ml-1">Archive</span>
+            <span className="ml-1">
+              {isArchived ? "Set active" : "Archive"}
+            </span>
           </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem>
@@ -151,7 +165,7 @@ const ItemAction = ({ id }: { id: number }) => {
           </DialogTrigger>
         </DropdownMenuContent>
       </DropdownMenu>
-      <DialogContent>
+      <DialogContent onClick={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>

@@ -14,7 +14,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const QuerySwitcher = () => {
+type QuerySwitcherProps = {
+  archive: boolean;
+  setArchive: (archive: boolean) => void;
+};
+
+const QuerySwitcher = ({ archive, setArchive }: QuerySwitcherProps) => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -28,7 +33,9 @@ const QuerySwitcher = () => {
                 <GalleryVerticalEnd className="size-4" />
               </div>
               <div className="flex flex-col gap-0.5 leading-none">
-                <span className="font-semibold">Active articles</span>
+                <span className="font-semibold">
+                  {archive ? "Archive" : "Active"}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -37,8 +44,12 @@ const QuerySwitcher = () => {
             className="w-[--radix-dropdown-menu-trigger-width]"
             align="start"
           >
-            <DropdownMenuItem>Active</DropdownMenuItem>
-            <DropdownMenuItem>Archive</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setArchive(false)}>
+              Active articles
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setArchive(true)}>
+              Archived articles
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
