@@ -17,10 +17,6 @@ type AnnotationViewProps = {
 };
 
 const AnnotationView = ({ article }: AnnotationViewProps) => {
-  useEffect(() => {
-    document.title = `${article.title} | Shuffle`;
-  }, [article]);
-
   const {
     containerRef,
     selectedTexts,
