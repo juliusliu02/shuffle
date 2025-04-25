@@ -1,8 +1,8 @@
 "use client";
-import React, { type FormEvent, useCallback } from "react";
+import React, { type FormEvent, useCallback, useContext } from "react";
 
 import { type InferRequestType } from "hono";
-import { PencilLine, Trash2 } from "lucide-react";
+import { NotebookText, PencilLine, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { mutate as globalMutate } from "swr";
 import useSWRMutation from "swr/mutation";
@@ -20,6 +20,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
+import ViewContext from "@/contexts/ViewContext";
 import { appClient } from "@/lib/rpc/app-cli";
 import {
   type ArticleWithNotesAndHighlights,
@@ -213,14 +214,29 @@ const Note = ({ note }: { note: NoteType }) => {
 };
 
 const Notes = ({ notes }: NotesProps) => {
+  const viewContext = useContext(ViewContext);
+  if (!viewContext) {
+    throw new Error("View Context not provided");
+  }
+
+  const { toggleView } = viewContext;
+
   notes.sort(
     (a, b) => a.highlights[0].startOffset - b.highlights[0].startOffset,
   );
 
   return (
     <>
-      <header className="mb-4">
+      <header className="mb-4 flex items-center justify-between">
         <h2 className="font-semibold text-xl">My notes</h2>
+        <Button
+          variant={"ghost"}
+          onClick={toggleView}
+          className={"text-muted-foreground"}
+          aria-label={"See flashcards"}
+        >
+          <NotebookText />
+        </Button>
       </header>
       <dl className="space-y-1 -mx-4">
         {notes.map((note) => (

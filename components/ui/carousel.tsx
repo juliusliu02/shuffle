@@ -237,7 +237,7 @@ function CarouselBar({ className, ...props }: React.ComponentProps<"div">) {
     useCarousel();
 
   return (
-    <div className={cn("w-full space-x-2", className)} {...props}>
+    <div className={cn("space-x-2", className)} {...props}>
       <Button
         data-slot="carousel-previous"
         variant={"outline"}
