@@ -16,6 +16,14 @@ type AnnotationViewProps = {
   article: ArticleWithNotesAndHighlights;
 };
 
+const getContextNode = (node: Node, tag: keyof HTMLElementTagNameMap) => {
+  let contextNode: Node | ParentNode | null = node;
+  while (contextNode && contextNode.nodeName.toLowerCase() !== tag) {
+    contextNode = contextNode.parentNode;
+  }
+  return contextNode ?? node; // fallback to original node content
+};
+
 const AnnotationView = ({ article }: AnnotationViewProps) => {
   const {
     containerRef,
@@ -32,11 +40,15 @@ const AnnotationView = ({ article }: AnnotationViewProps) => {
   }, [getOffsets]);
 
   const handleClick = async () => {
+    const contextNodes = selectedNodes.map((node) =>
+      getContextNode(node, "span"),
+    ); // context is a sentence wrapped in a span
+
     const note = {
       entry: selectedTexts.join(" ... "),
       highlights: selectedRanges,
-      context: selectedNodes
-        .map((node) => node.textContent)
+      context: [...new Set(contextNodes)] // eliminate duplicate
+        .map((node) => node.textContent) // get text
         .join(" ") // segmenter preserves white space but there is no whitespace across paragraphs
         .replaceAll(/ +/g, " ") // remove extra whitespaces
         .trim(),
