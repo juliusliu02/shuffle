@@ -6,8 +6,8 @@ import type {
   HighlightInsert,
   NoteInsertWithHighlights,
   NoteWithHighlights,
-  Highlight,
-  Note,
+  HighlightSelect,
+  NoteSelect,
 } from "@/lib/types";
 import {
   articlesTable,
@@ -51,7 +51,7 @@ export const createNote = async (
     ...h,
     noteId: note.id,
   }));
-  const newHighlights: Highlight[] = await db
+  const newHighlights: HighlightSelect[] = await db
     .insert(highlightsTable)
     .values(highlightsData)
     .returning();
@@ -62,7 +62,7 @@ export const updateNote = async (
   id: number,
   userId: number,
   data: z.infer<typeof updateNoteSchema>,
-): Promise<Note[]> => {
+): Promise<NoteSelect[]> => {
   return db
     .update(notesTable)
     .set(data)
@@ -74,7 +74,7 @@ export const updateNote = async (
 export const deleteNote = async (
   id: number,
   userId: number,
-): Promise<Note[]> => {
+): Promise<NoteSelect[]> => {
   const note = await db
     .select()
     .from(authorizedNotesView)
