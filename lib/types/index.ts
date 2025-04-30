@@ -7,15 +7,16 @@ import type {
 // ensure this is a type-only file
 import type * as articleSchema from "@/server/db/schema/articles";
 import type * as authSchema from "@/server/db/schema/auth";
+import type * as flashcardsSchema from "@/server/db/schema/flashcards";
 
-export type Article = typeof articleSchema.articlesTable.$inferSelect;
+export type ArticleSelect = typeof articleSchema.articlesTable.$inferSelect;
 export type ArticleInsert = Omit<
   typeof articleSchema.articlesTable.$inferInsert,
   "id"
 >;
-export type ArticleListItem = Pick<Article, "id" | "title" | "createdAt">;
+export type ArticleListItem = Pick<ArticleSelect, "id" | "title" | "createdAt">;
 
-export type Note = typeof articleSchema.notesTable.$inferSelect;
+export type NoteSelect = typeof articleSchema.notesTable.$inferSelect;
 export type NoteInsert = Omit<
   typeof articleSchema.notesTable.$inferInsert,
   "id"
@@ -25,7 +26,7 @@ export type NoteInsertWithHighlights = NoteInsert & {
   highlights: Omit<HighlightInsert, "noteId">[];
 };
 
-export type Highlight = typeof articleSchema.highlightsTable.$inferSelect;
+export type HighlightSelect = typeof articleSchema.highlightsTable.$inferSelect;
 export type HighlightInsert = Omit<
   typeof articleSchema.highlightsTable.$inferInsert,
   "id"
@@ -74,3 +75,6 @@ export type ArticleWithNotesAndHighlights = InferResultType<
     };
   }
 >;
+
+export type CardSelect = typeof flashcardsSchema.cardsTable.$inferSelect;
+export type CardInsert = Omit<CardSelect, "id">;

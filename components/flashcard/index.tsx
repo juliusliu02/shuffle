@@ -18,12 +18,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Note } from "@/lib/types";
+import type { NoteSelect } from "@/lib/types";
 
 type FlashcardProps = {
   source: string | null;
   title: string;
-  note: Note;
+  note: NoteSelect;
 };
 
 const Flashcard = ({ source, title, note }: FlashcardProps) => {
