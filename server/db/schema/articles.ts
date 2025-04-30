@@ -2,6 +2,7 @@ import { eq, relations, sql } from "drizzle-orm";
 import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
 
 import { usersTable } from "@/server/db/schema/auth";
+import { cardsTable } from "@/server/db/schema/flashcards";
 
 // stores articles
 export const articlesTable = sqliteTable("articles_table", {
@@ -46,6 +47,7 @@ export const notesRelation = relations(notesTable, ({ one, many }) => ({
     references: [articlesTable.id],
   }),
   highlights: many(highlightsTable),
+  cards: many(cardsTable),
 }));
 
 export const articlesRelation = relations(articlesTable, ({ many }) => ({
