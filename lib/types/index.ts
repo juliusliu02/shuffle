@@ -38,7 +38,9 @@ export type User = Omit<
 >;
 export type Session = typeof authSchema.sessionsTable.$inferSelect;
 
-type Schema = typeof articleSchema;
+type Schema = typeof articleSchema &
+  typeof authSchema &
+  typeof flashcardsSchema;
 type TSchema = ExtractTablesWithRelations<Schema>;
 
 // Reference: https://github.com/drizzle-team/drizzle-orm/issues/695#issuecomment-1881454650
@@ -78,3 +80,14 @@ export type ArticleWithNotesAndHighlights = InferResultType<
 
 export type CardSelect = typeof flashcardsSchema.cardsTable.$inferSelect;
 export type CardInsert = Omit<CardSelect, "id">;
+
+export type CardWithNoteWithArticle = InferResultType<
+  "cardsTable",
+  {
+    note: {
+      with: {
+        article: true;
+      };
+    };
+  }
+>;
