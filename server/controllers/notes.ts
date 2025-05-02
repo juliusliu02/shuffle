@@ -30,7 +30,8 @@ const NoteApp = new Hono()
   })
   .delete("/:id", zValidator("param", deleteNoteSchema), async (c) => {
     const { id } = c.req.valid("param");
-    await noteService.deleteNote(id, c.get("user").id);
+    const response = await noteService.deleteNote(id, c.get("user").id);
+    if (response.rowsAffected === 0) return c.body(null, 404);
     return c.body(null, 204);
   });
 
