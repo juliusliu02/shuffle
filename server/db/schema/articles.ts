@@ -1,5 +1,5 @@
-import { eq, relations, sql } from "drizzle-orm";
-import { int, sqliteTable, sqliteView, text } from "drizzle-orm/sqlite-core";
+import { relations, sql } from "drizzle-orm";
+import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 import { usersTable } from "@/server/db/schema/auth";
 import { cardsTable } from "@/server/db/schema/flashcards";
@@ -60,15 +60,3 @@ export const highlightsRelation = relations(highlightsTable, ({ one }) => ({
     references: [notesTable.id],
   }),
 }));
-
-export const authorizedNotesView = sqliteView("authorized_notes_view").as(
-  (qb) =>
-    qb
-      .select({
-        id: notesTable.id,
-        articleId: notesTable.articleId,
-        userId: articlesTable.userId,
-      })
-      .from(notesTable)
-      .innerJoin(articlesTable, eq(notesTable.articleId, articlesTable.id)),
-);

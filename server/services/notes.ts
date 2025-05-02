@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, exists } from "drizzle-orm";
 import { type z } from "zod";
 
 import { type updateNoteSchema } from "@/lib/schemas/notes";
@@ -11,7 +11,6 @@ import type {
 } from "@/lib/types";
 import {
   articlesTable,
-  authorizedNotesView,
   highlightsTable,
   notesTable,
 } from "@/server/db/schema/articles";
@@ -66,28 +65,40 @@ export const updateNote = async (
   return db
     .update(notesTable)
     .set(data)
-    .from(authorizedNotesView)
-    .where(and(eq(notesTable.id, id), eq(authorizedNotesView.userId, userId)))
+    .where(
+      and(
+        eq(notesTable.id, id),
+        exists(
+          db
+            .select()
+            .from(articlesTable)
+            .where(
+              and(
+                eq(articlesTable.id, notesTable.articleId),
+                eq(articlesTable.userId, userId),
+              ),
+            ),
+        ),
+      ),
+    )
     .returning();
 };
 
-export const deleteNote = async (
-  id: number,
-  userId: number,
-): Promise<NoteSelect[]> => {
-  const note = await db
-    .select()
-    .from(authorizedNotesView)
-    .where(
-      and(
-        eq(authorizedNotesView.id, id),
-        eq(authorizedNotesView.userId, userId),
+export const deleteNote = async (id: number, userId: number) => {
+  return db.delete(notesTable).where(
+    and(
+      eq(notesTable.id, id),
+      exists(
+        db
+          .select()
+          .from(articlesTable)
+          .where(
+            and(
+              eq(articlesTable.id, notesTable.articleId),
+              eq(articlesTable.userId, userId),
+            ),
+          ),
       ),
-    );
-
-  if (!note) {
-    return [];
-  }
-
-  return db.delete(notesTable).where(eq(notesTable.id, id)).returning();
+    ),
+  );
 };
