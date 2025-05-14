@@ -2,7 +2,7 @@
 import React from "react";
 
 import type { InferRequestType } from "hono";
-import { Archive, Download, Ellipsis, Trash2 } from "lucide-react";
+import { Archive, Download, Ellipsis, FilePenLine, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -57,6 +57,20 @@ const deleteArticle = async (
 ) => {
   const response = await $delete(arg);
   if (response.status !== 204) {
+    const data = await response.json();
+    throw new Error(data.error);
+  }
+  return response;
+};
+
+const $cardPost = appClient.articles[":id"].flashcards.$post;
+
+const generateCards = async (
+  key: string,
+  { arg }: { arg: InferRequestType<typeof $cardPost> },
+) => {
+  const response = await $cardPost(arg);
+  if (response.status !== 200) {
     const data = await response.json();
     throw new Error(data.error);
   }
@@ -135,6 +149,26 @@ const ItemAction = ({ id, isArchived }: ItemActionProps) => {
     }
   };
 
+  const { trigger: genCardTrigger, isMutating: genCardIsMutating } =
+    useSWRMutation("/api/articles/cards", generateCards);
+
+  const handleCreateCard = async () => {
+    try {
+      await genCardTrigger({
+        param: {
+          id: id.toString(),
+        },
+      });
+      toast.success("Cards generated successfully.");
+    } catch (error) {
+      let description = "Failed to create cards. Please try again later.";
+      if (error instanceof Error) {
+        description = error.message;
+      }
+      toast.error(description);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DropdownMenu>
@@ -150,6 +184,13 @@ const ItemAction = ({ id, isArchived }: ItemActionProps) => {
               <Download />
               <span className="ml-1">Export</span>
             </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            disabled={genCardIsMutating}
+            onClick={handleCreateCard}
+          >
+            <FilePenLine />
+            <span className="ml-1">Create cards</span>
           </DropdownMenuItem>
           <DropdownMenuItem disabled={archiveMutating} onClick={handleArchive}>
             <Archive />

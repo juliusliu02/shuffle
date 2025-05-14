@@ -20,7 +20,7 @@ type NavbarProps = {
 
 const AppNavbar = ({ user }: NavbarProps) => {
   return (
-    <header className="flex sticky top-0 bg-background h-16 shrink-0 items-center border-b px-4 z-10">
+    <header className="flex bg-background h-16 shrink-0 items-center border-b px-4 z-10">
       <SidebarTrigger />
       <div className="ml-2 mr-1 h-4">
         <Separator orientation="vertical" />
@@ -37,7 +37,7 @@ const AppNavbar = ({ user }: NavbarProps) => {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild>
-              <Link className={navigationMenuTriggerStyle()} href="#">
+              <Link className={navigationMenuTriggerStyle()} href="/flashcards">
                 Flashcards
               </Link>
             </NavigationMenuLink>

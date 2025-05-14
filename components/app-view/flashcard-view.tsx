@@ -24,8 +24,8 @@ const FlashcardView = ({ article }: FlashcardViewProps) => {
   const { toggleView } = viewContext;
 
   return (
-    <div className="flex justify-center relative top-1/4">
-      <Carousel className="w-full max-w-2xl">
+    <div className="absolute top-1/2 left-1/2 -translate-1/2 w-full max-w-2xl">
+      <Carousel>
         <CarouselContent>
           {article.notes.map((note) => (
             <CarouselItem key={note.id} className="py-4">

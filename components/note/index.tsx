@@ -24,12 +24,12 @@ import ViewContext from "@/contexts/ViewContext";
 import { appClient } from "@/lib/rpc/app-cli";
 import {
   type ArticleWithNotesAndHighlights,
-  type NoteWithHighlights as NoteType,
+  type NoteWithHighlights,
 } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type NotesProps = {
-  notes: NoteType[];
+  notes: NoteWithHighlights[];
 };
 
 const $put = appClient.notes[":id"].$put;
@@ -42,7 +42,7 @@ const fetcher = async (
   return await $put(arg);
 };
 
-const Note = ({ note }: { note: NoteType }) => {
+const Note = ({ note }: { note: NoteWithHighlights }) => {
   const url = `/api/notes/${note.id}`;
   const [edit, setEdit] = React.useState<boolean>(false);
   const { trigger, isMutating } = useSWRMutation(url, fetcher);
@@ -69,7 +69,7 @@ const Note = ({ note }: { note: NoteType }) => {
                 return {
                   ...old,
                   notes: old.notes.map(
-                    (n: NoteType): NoteType =>
+                    (n: NoteWithHighlights): NoteWithHighlights =>
                       n.id === note.id ? { ...n, ...fieldsToUpdate } : n,
                   ),
                 };
@@ -77,12 +77,10 @@ const Note = ({ note }: { note: NoteType }) => {
               false, // don’t revalidate; we already have the right data
             );
           },
-          onError: (error: unknown) => {
-            if (error instanceof Error) {
-              toast.error(error.message);
-              return;
-            }
-            toast.error("An error occurred while saving your note.");
+          onError: (error: Error) => {
+            toast.error(
+              "An error occurred while saving your note: " + error.message,
+            );
           },
         },
       );
@@ -106,7 +104,9 @@ const Note = ({ note }: { note: NoteType }) => {
           if (!old) return old;
           return {
             ...old,
-            notes: old.notes.filter((n: NoteType) => n.id !== note.id),
+            notes: old.notes.filter(
+              (n: NoteWithHighlights) => n.id !== note.id,
+            ),
           };
         },
       );

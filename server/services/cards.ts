@@ -1,4 +1,4 @@
-import { and, eq, lte } from "drizzle-orm";
+import { and, asc, eq, lte } from "drizzle-orm";
 
 import type { CardInsert, CardSelect } from "@/lib/types";
 import { db } from "@/server/db";
@@ -18,6 +18,7 @@ export const getDueCards = async (uid: number) => {
         },
       },
     },
+    orderBy: asc(cardsTable.due),
   });
 };
 

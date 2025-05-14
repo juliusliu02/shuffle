@@ -29,3 +29,7 @@ export const groupArticlesByDate = (articles: ArticleListItem[]) => {
 
   return Array.from(buckets, ([group, items]) => ({ group, items }));
 };
+
+export const tomorrow = () => {
+  return dayjs().endOf("day").toDate();
+};

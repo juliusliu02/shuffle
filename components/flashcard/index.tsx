@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 import Link from "next/link";
@@ -31,7 +32,7 @@ const Flashcard = ({ source, title, note }: FlashcardProps) => {
   const ref = React.useRef<HTMLParagraphElement>(null);
 
   return (
-    <Card className="gap-4 group" onClick={() => setOpen(!open)}>
+    <Card className="gap-4 group h-80 w-2xl" onClick={() => setOpen(!open)}>
       <CardHeader>
         <Breadcrumb>
           <BreadcrumbList>
@@ -51,9 +52,9 @@ const Flashcard = ({ source, title, note }: FlashcardProps) => {
           </BreadcrumbList>
         </Breadcrumb>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-y-scroll">
         <CardTitle className="text-2xl">{note.entry}</CardTitle>
-        <CardDescription className="mt-2 ml-1 border-l-2 pl-4 text-base">
+        <CardDescription className="mt-4 ml-1 border-l-2 pl-4 text-base leading-relaxed">
           {note.context}
         </CardDescription>
         {note.note && (
@@ -62,7 +63,7 @@ const Flashcard = ({ source, title, note }: FlashcardProps) => {
             className="overflow-y-hidden transition-all"
             style={{ height: open ? ref.current?.offsetHeight || 0 : 0 }}
           >
-            <p className="pt-3" ref={ref}>
+            <p className="pt-3 leading-relaxed" ref={ref}>
               {note.note}
             </p>
           </div>
